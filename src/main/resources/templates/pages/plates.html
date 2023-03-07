@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <head th:replace="fragments/_header :: head(pageTitle='Platos')">
+</head>
+
+<body class="d-flex flex-column h-100">
+    <header th:replace="fragments/_nav.html :: nav"></header>
+
+    <div class="container mt-3">
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Abrir modal</button>
+      <div class="modal" id=myModal>
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-tittle">Encabezado</h5>
+              <button class="btn btn-close" data-bs-dismiss="modal"></button>
+           </div>
+            <div class="modal-body">
+             Aquí la descripción del modal
+            </div>
+           <div class="modal-footer">
+             <button class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+    
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <head th:replace="fragments/_header :: head(pageTitle='INGREDIENTS')">
+    
+</head>
+
+<body class="d-flex flex-column h-100">
+    <header th:replace="fragments/_nav.html :: nav"></header>
+
+    <br />
+
+    <div class="container">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#añadirModal" id="btn-add-new-ingredient"><i class="fas fa-plus"></i>  Añadir nuevo ingrediente</button>
+    </div>
+
+    <br />
+    
+    <!--Esto son datos de test, los datos se rellenan en ingredients.js-->
+    <div class="container">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">NOMBRE</th>
+            <th scope="col">NUMERO DE UNIDADES</th>
+            <th scope="col">TIPO DE UNIDADES</th>
+            <th scope="col">GRAMOS POR UNIDAD</th>
+            <th scope="col">ALERTA</th>
+            <th scope="col">CATEGORIA</th>
+            <th scope="col" style="text-align: center;">MODIFICAR</th>
+            <th scope="col" style="text-align: center;">ELIMINAR</th>
+          </tr>
+        </thead>
+        <tbody id="listaRegistros">
+          <tr>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MODAL AÑADIR INGREDIENTE-->
+    <div class="modal fade" id="añadirModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> Añadir ingrediente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="ingname" class="form-control" placeholder="Nombre" required="required">
+            <br />
+            <input type="number" id="ingquantity" class="form-control" placeholder="Numero de unidades" required="required">
+            <br />
+            <input type="text" id="ingmeasure" class="form-control" placeholder="Tipo de unidad(cesta, kilos, litros, unidad..)" required="required">
+            <br />
+            <input type="number" id="inggrams" class="form-control" placeholder="Gramos por unidad" required="required">
+            <br />
+            <input type="number" id="ingalert" class="form-control" placeholder="Alerta minima de existencias" required="required">
+            <br />
+            <input type="text" id="ingcategory" class="form-control" placeholder="Categoria del producto" required="required">
+            <br />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-save-new-ingredient"><i class="fa-regular fa-floppy-disk"></i>  Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL EDITAR INGREDIENTE-->
+    <div class="modal fade" id="editarModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> Editar ingrediente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="ingnameedit">Nombre:</label>
+              <input type="text" id="ingnameedit" class="form-control" placeholder="Nombre" required="required">
+            </div>
+            <br/>
+            <div class="form-group">
+              <label for="ingquantityedit">Numero de unidades:</label>
+              <input type="number" id="ingquantityedit" class="form-control" placeholder="Numero de unidades" required="required">
+            </div>
+            <br/>
+            <div class="form-group">
+              <label for="ingmeasureedit">Tipo de unidad(cesta, kilos, litros, unidad..):</label>
+              <input type="text" id="ingmeasureedit" class="form-control" placeholder="Tipo de unidad" required="required">
+            </div>
+            <br/>
+            <div class="form-group">
+              <label for="inggramsedit">Gramos por unidad:</label>
+              <input type="number" id="inggramsedit" class="form-control" placeholder="Gramos por unidad" required="required">
+            </div>
+            <br/>
+            <div class="form-group">
+              <label for="ingalertedit">Alerta minima de existencias:</label>
+              <input type="number" id="ingalertedit" class="form-control" placeholder="Alerta minima de existencias" required="required">
+            </div>
+            <br/>
+            <div class="form-group">
+              <label for="ingcategoryedit">Categoria del producto:</label>
+              <input type="text" id="ingcategoryedit" class="form-control" placeholder="Categoria del producto" required="required">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-cancel-edit"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-save-edit"><i class="fa-regular fa-floppy-disk"></i>  Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ELIMINAR INGREDIENTE
+    <div class="modal fade" id="eliminarModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Eliminar ingrediente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h5 class="modal-title text-light">¿Estas seguro de que quieres eliminar este ingrediente?</h5>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+            <button type="button" class="btn btn-danger btneliminar" data-bs-dismiss="modal" id="btn-delete-ingredient"><i class="fa-solid fa-trash"></i>  Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>-->
+
+
+    <script th:src="@{/js/ingredients.js}" type="module"></script>
+
+    
+</body>
+
+</html>

@@ -12,13 +12,17 @@ public class RootController {
         return "index";
     }
 
-    @GetMapping("/ingredientes")
+    @GetMapping("/ingredients")
     public String peliculas(Model model) {
-        return "pages/ingredientes";
+        return "pages/ingredients";
     }
 
-    @GetMapping("/recetas")
+    @GetMapping("/plates")
     public String cines(Model model) {
-        return "pages/recetas";
+        return "pages/plates";
+    }
+    @GetMapping("/test")
+    public String test(Model model) {
+        return "pages/test";
     }
 }

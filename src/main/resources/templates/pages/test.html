@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <head th:replace="fragments/_header :: head(pageTitle='TEST')">
+    
+</head>
+
+<body class="d-flex flex-column h-100">
+    <header th:replace="fragments/_nav.html :: nav"></header>
+
+    <td><button type="button" id="btn-abrir-modal" class="btn-primary">Añadir nuevo ingrediente</button></td>
+
+    <div id="ingredients-container"></div>
+
+    <dialog id="modal">
+      <!--<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header modheader">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Gestionar Usuario</h5>
+                <button id="btn-cerrar-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body modbody">
+                  <form class=" d-flex flex-column align-items-center formusuario" id="ingredient-form" method="post">
+                      <div class="d-flex justify-content-between mt-5">
+                        <p>
+                          <label for="title">Nombre:</label>
+                          <input type="text" placeholder="Nombre del ingrediente" id="ingredient-title" required="required">
+                        </p>
+                        <p class="ms-4">
+                          <label for="quantity">Cantidad:</label>
+                          <input type ="text" placeholder="Cantidad" id="ingredient-quantity" required="required"></input>
+                        </p>
+                      </div>
+                      <div class="d-flex justify-content-between mt-2">
+                        <p>
+                          <label for="measure">Medida:</label>
+                          <input type="text" placeholder="Medida (kgs, g, litros...)" id="ingredient-measure" required="required">
+                        </p>
+                        <p class="ms-4">
+                          <label for="alert">Alerta:</label>
+                          <input type="text" placeholder="Cantidad minima" id="ingredient-alert" required="required">
+                        </p>
+                      </div>
+                      <button id="btn-ingredient-form" type="submit">Guardar</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        <!--</div>-->
+    </dialog>
+    <script th:src="@{/js/test.js}" type="module"></script>
+    
+</body>
+
+</html>

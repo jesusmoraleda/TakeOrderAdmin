@@ -19,3 +19,57 @@
     border-bottom: 1px solid gray;
 }
 
+.modbody {
+    height: 400px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+}
+
+.form-group label {
+    margin-right: 10px;
+    width: 250px;
+}
+
+.form-group input {
+    flex: 1;
+}
+/*MODAL*/
+
+#modal::backdrop{
+    background-color: rgba(0, 0, 0, .55);
+}
+
+#modal {
+    max-width: fit-content;
+    max-height: fit-content;
+}
+
+#btn-abrir-modal {
+    width: 350px;
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    text-shadow: 3px 2px 1px #9daef5;
+    -webkit-box-shadow: 6px 5px 24px #666666;
+    -moz-box-shadow: 6px 5px 24px #666666;
+    box-shadow: 6px 5px 24px #666666;
+    font-family: Arial;
+    color: #fafafa;
+    font-size: 27px;
+    padding: 19px;
+    text-decoration: none;
+    margin-left: 50%;
+    transform: translateX(-50%); 
+}
+
+table .btneditar {
+    color: dodgerblue;
+    cursor: pointer;
+}
+table .btntrash {
+    color: red;
+    cursor: pointer;
+}

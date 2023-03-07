@@ -2,12 +2,14 @@ import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, get
 
 const ingredientForm = document.getElementById('ingredient-form')
 const ingredientsContainer = document.getElementById('ingredients-container')
+//const modal = document.getElementById('modalUsuario')
 
 let editStatus = false;
 let id = '';
 
 //Esto se ejecuta al arrancar la pagina ¿?
 window.addEventListener('DOMContentLoaded', async () => {
+    console.log("ingredients.js cargado con exito");
 
     onGetIngredients((querySnapshot) => {
         ingredientsContainer.innerHTML = "";
@@ -67,7 +69,16 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     })
 
+    const btnAbrirModal = document.querySelector("#btn-abrir-modal");
+    const btnCerrarModal = document.querySelector("#btn-cerrar-modal");
     
+    btnAbrirModal.addEventListener("click", ()=>{
+        modal.showModal();
+    })
+
+    btnCerrarModal.addEventListener("click", ()=>{
+        modal.close();
+    })
 
 })
 
@@ -101,5 +112,6 @@ ingredientForm.addEventListener('submit', async (e) =>{
         console.log(error);
     }
 
-    ingredientForm.reset()
+    ingredientForm.reset();
+    modal.close();
 })
