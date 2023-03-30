@@ -5,7 +5,7 @@ const btnAddNewIngredient = document.getElementById('btn-add-new-ingredient')
 const btnDeleteIngredient = document.getElementById('btn-delete-ingredient')
 const btnCancelEdit = document.getElementById('btn-cancel-edit')
 const btnSaveEdit = document.getElementById('btn-save-edit')
-const listaRegistros = document.getElementById('listaRegistros')
+const listaIngredientes = document.getElementById('listaIngredientes')
 
 let id = '';
 
@@ -13,11 +13,11 @@ let id = '';
 //Esto se ejecuta al arrancar la pagina ¿?
 window.addEventListener('DOMContentLoaded', () => {
     onGetIngredients((querySnapshot) => {
-        listaRegistros.innerHTML = "";
+        listaIngredientes.innerHTML = "";
     
         querySnapshot.forEach((doc) => {
           const ingredient = doc.data();
-          listaRegistros.innerHTML += `
+          listaIngredientes.innerHTML += `
           <tr>
             <td>${ingredient.name}</td>
             <td>${ingredient.quantity}</td>
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
           </tr>`
         });
 
-        const btnsDelete = listaRegistros.querySelectorAll(".btntrash");
+        const btnsDelete = listaIngredientes.querySelectorAll(".btntrash");
 
         btnsDelete.forEach((btn) =>
             btn.addEventListener("click", async (e) => {
@@ -66,7 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         );
 
-        const btnsEdit = listaRegistros.querySelectorAll(".btneditar");
+        const btnsEdit = listaIngredientes.querySelectorAll(".btneditar");
 
         btnsEdit.forEach((btn) => {
         btn.addEventListener("click", async (e) => {
@@ -106,10 +106,10 @@ btnAddNewIngredient.addEventListener("click", ()=>{
 
 btnSaveNewIngredient.addEventListener("click", ()=>{
     const name = document.getElementById('ingname').value;
-    const quantity = document.getElementById('ingquantity').value;
+    const quantity = parseInt(document.getElementById('ingquantity').value);
     const measure = document.getElementById('ingmeasure').value;
-    const grams = document.getElementById('inggrams').value;
-    const alert = document.getElementById('ingalert').value;
+    const grams = parseInt(document.getElementById('inggrams').value);
+    const alert = parseInt(document.getElementById('ingalert').value);
     const category = document.getElementById('ingcategory').value;
 
     try{

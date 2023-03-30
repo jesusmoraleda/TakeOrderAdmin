@@ -7,12 +7,37 @@
 <body>
     <header th:replace="fragments/_nav.html :: nav"></header>
 
-    <main class="flex-shrink-0">
-        <div class="container">
-            <h1 class="mt-5">Bienvenid@ a TakeOrderAdmin</h1>
-        </div>
-    </main>
+    <div class="container text-center">
+        <h1 class="mt-5">Bienvenid@ a TakeOrderAdmin</h1>
+    </div>
 
+    <br />
+
+    <div class="container">
+      <button class="btn btn-success" id="btn-restock">  Reponer Stock</button>
+    </div>
+
+    <br />
+
+    <!--Esto son datos de test, los datos se rellenan en index.js-->
+    <div class="container">
+        <table class="table alertTable">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">NOMBRE</th>
+              <th scope="col">UNIDADES</th>
+              <th scope="col">MEDIDA</th>
+              <th scope="col">ALERTA</th>
+            </tr>
+          </thead>
+          <tbody id="listaAlertas">
+            <tr>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+    <script th:src="@{/js/index.js}" type="module"></script>
     <!--<th:block th:replace="fragments/_footer.html :: footer" />-->
     
 </body>

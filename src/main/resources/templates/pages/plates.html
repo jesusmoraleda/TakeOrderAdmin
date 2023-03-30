@@ -2,33 +2,67 @@
 <html class="h-100" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <head th:replace="fragments/_header :: head(pageTitle='Platos')">
+  <head th:replace="fragments/_header :: head(pageTitle='Platos')">
 </head>
 
 <body class="d-flex flex-column h-100">
-    <header th:replace="fragments/_nav.html :: nav"></header>
+  <header th:replace="fragments/_nav.html :: nav"></header>
 
-    <div class="container mt-3">
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Abrir modal</button>
-      <div class="modal" id=myModal>
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-tittle">Encabezado</h5>
-              <button class="btn btn-close" data-bs-dismiss="modal"></button>
-           </div>
-            <div class="modal-body">
-             Aquí la descripción del modal
-            </div>
-           <div class="modal-footer">
-             <button class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+  <br />
+
+  <div class="container">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#añadirPlato" id="btn-add-new-plate"><i class="fas fa-plus"></i> Añadir nuevo plato</button>
+  </div>
+
+  <br />
+
+  <div class="container">
+    <table class="table">
+      <thead class="thead-dark"> 
+        <tr>
+          <th scope="col">Nombre del plato</th>
+          <th scope="col">Ingredientes y cantidades</th>
+        </tr>
+      </thead>
+      <tbody id="listaPlatos">
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL AÑADIR PLATOS-->
+  <div class="modal fade" id="añadirPlato" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"> Añadir plato</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="platename" class="form-control" placeholder="Nombre" required="required">
+          <br />
+          <div class="form-group">
+            <label for="plateavailable">Disponible:</label>
+            <div class="form-check form-switch form-check-inline">
+              <input type="checkbox" id="plateavailable" class="form-check-input" checked>
             </div>
           </div>
+          <hr>
+            <h6>Ingredientes:</h6>
+            <div id="ingredient-list">
+            </div>
+            <button type="button" class="btn btn-primary mt-3" id="add-ingredient">Añadir ingrediente</button>
+          <br />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-save-new-plate"><i class="fa-regular fa-floppy-disk"></i>  Guardar</button>
         </div>
       </div>
     </div>
-   
-    
+  </div>
+
+  <script th:src="@{/js/plates.js}" type="module"></script>
+
 </body>
 
 </html>

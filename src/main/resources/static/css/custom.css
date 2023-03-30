@@ -73,3 +73,29 @@ table .btntrash {
     color: red;
     cursor: pointer;
 }
+
+.alertTable {
+    width: 100px;
+    height: 100px;
+    text-align: left;
+}
+
+.alertTable td {
+    color: red;
+    text-align: left;
+}
+
+/*Plates*/
+.plato {
+    display: flex;
+    align-items: center;
+  }
+
+  .plato h3 {
+    margin-right: 10px;
+  }
+
+  .oculto {
+    display: none;
+  }
+

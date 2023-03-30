@@ -49,3 +49,26 @@ export const getIngredient = id => getDoc(doc(db, "ingredients", id));
 
 export const updateIngredient = (id, newFields) =>
   updateDoc(doc(db, "ingredients", id), newFields);
+
+
+//Plates
+export const savePlate = (name, available, ingredients) => {
+  const ingredientsData = ingredients.map(ingredient => ({
+    name: ingredient.name,
+    quantity: ingredient.quantity
+  }));
+  addDoc(collection(db, "plates"), { name, available, ingredients: ingredientsData});
+}
+
+export const getPlates = () => getDocs(collection(db, 'plates'))
+
+export const onGetPlates = (callback) => 
+  onSnapshot(collection(db, "plates"), callback);
+
+export const deletePlate = (id) => 
+  deleteDoc(doc(db, "plates", id));
+
+export const getPlate = id => getDoc(doc(db, "plates", id));
+
+export const updatePlate = (id, newFields) =>
+  updateDoc(doc(db, "plates", id), newFields);
