@@ -99,3 +99,10 @@ table .btntrash {
     display: none;
   }
 
+.sortable {
+    cursor: pointer; /* cambia el cursor del ratón a la forma de un ícono de pulsar */
+}
+
+.selected {
+    color: red;
+  }

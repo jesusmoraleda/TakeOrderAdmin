@@ -12,8 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
     
         querySnapshot.forEach((doc) => {
           const ingredient = doc.data();
-          console.log(parseInt(ingredient.quantity));
-          console.log(parseInt(ingredient.alert));
           if(parseInt(ingredient.quantity) < parseInt(ingredient.alert)){
             listaAlertas.innerHTML += `
             <tr>

@@ -34,8 +34,8 @@ export const analytics = getAnalytics(app);
 export const db = getFirestore();
 
 //Ingredients
-export const saveIngredient = (name, quantity, measure, grams, alert, category) =>
-  addDoc(collection(db, "ingredients"), { name, quantity, measure, grams, alert, category});
+export const saveIngredient = (name,category,quantity,grams,measure,alert) =>
+  addDoc(collection(db, "ingredients"), { name,category,quantity,grams,measure,alert});
 
 export const getIngredients = () => getDocs(collection(db, 'ingredients'))
 
@@ -72,3 +72,8 @@ export const getPlate = id => getDoc(doc(db, "plates", id));
 
 export const updatePlate = (id, newFields) =>
   updateDoc(doc(db, "plates", id), newFields);
+
+//Categories
+
+export const onGetCategories = (callback) => 
+  onSnapshot(collection(db, "ingredient_categories"), callback);

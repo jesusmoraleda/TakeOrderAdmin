@@ -1,4 +1,4 @@
-import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient } from "./firebase.js"
+import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetCategories } from "./firebase.js"
 
 const btnSaveNewIngredient = document.getElementById('btn-save-new-ingredient')
 const btnAddNewIngredient = document.getElementById('btn-add-new-ingredient')
@@ -9,9 +9,19 @@ const listaIngredientes = document.getElementById('listaIngredientes')
 
 let id = '';
 
+const categories = [];
+
 
 //Esto se ejecuta al arrancar la pagina ¿?
 window.addEventListener('DOMContentLoaded', () => {
+
+    onGetCategories((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const category = doc.data();
+          categories.push(category.name);
+        });
+    })
+
     onGetIngredients((querySnapshot) => {
         listaIngredientes.innerHTML = "";
     
@@ -20,15 +30,18 @@ window.addEventListener('DOMContentLoaded', () => {
           listaIngredientes.innerHTML += `
           <tr>
             <td>${ingredient.name}</td>
-            <td>${ingredient.quantity}</td>
-            <td>${ingredient.measure}</td>
-            <td>${ingredient.grams}</td>
-            <td>${ingredient.alert}</td>
             <td>${ingredient.category}</td>
+            <td>${ingredient.quantity}</td>
+            <td>${ingredient.grams}</td>
+            <td>${ingredient.measure}</td>
+            <td>${ingredient.alert}</td>
             <td align="center"><button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="fa-solid fa-pencil btneditar" data-id="${doc.id}"></i></button></td>
             <td align="center"><button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#eliminarModal"><i class="fa-solid fa-trash btntrash" data-id="${doc.id}"></i></button></td>
           </tr>`
         });
+        
+        // Ordenar por nombre por defecto
+        sortTable(0);
 
         const btnsDelete = listaIngredientes.querySelectorAll(".btntrash");
 
@@ -36,8 +49,8 @@ window.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener("click", async (e) => {
                 id = e.target.dataset.id;
                 Swal.fire({
-                    title: 'ELIMINAR REGISTRO',
-                    text: "¿Está seguro de eliminar el producto?",
+                    title: 'ELIMINAR INGREDIENTE',
+                    text: "¿Está seguro de eliminar el ingrediente?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -79,7 +92,15 @@ window.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('ingmeasureedit').value = ingredient.measure;
                 document.getElementById('inggramsedit').value = ingredient.grams;
                 document.getElementById('ingalertedit').value = ingredient.alert;
-                document.getElementById('ingcategoryedit').value = ingredient.category;
+                document.getElementById('category-select-edit').value = ingredient.category;
+
+                
+                const select = document.querySelector('#category-select-edit');
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.textContent = category;
+                    select.appendChild(option);
+                });
 
                 id = doc.id;
                 console.log(id);
@@ -91,6 +112,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
     })
+
     
 })
 
@@ -101,7 +123,16 @@ btnAddNewIngredient.addEventListener("click", ()=>{
     document.getElementById('ingmeasure').value = '';
     document.getElementById('inggrams').value = '';
     document.getElementById('ingalert').value = '';
-    document.getElementById('ingcategory').value = '';
+    document.getElementById('category-select').selectedIndex = -1;
+
+    const select = document.querySelector('#category-select');
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.textContent = category;
+        select.appendChild(option);
+    });
+
+
 })
 
 btnSaveNewIngredient.addEventListener("click", ()=>{
@@ -110,10 +141,11 @@ btnSaveNewIngredient.addEventListener("click", ()=>{
     const measure = document.getElementById('ingmeasure').value;
     const grams = parseInt(document.getElementById('inggrams').value);
     const alert = parseInt(document.getElementById('ingalert').value);
-    const category = document.getElementById('ingcategory').value;
+    console.log(document.getElementById('category-select'));
+    const category = document.getElementById('category-select').value;
 
     try{
-        saveIngredient(name,quantity,measure,grams,alert,category);
+        saveIngredient(name,category,quantity,grams,measure,alert);
         Swal.fire(
             'AÑADIR INGREDIENTE',
             '¡Ingrediente añadido con éxito!',
@@ -136,7 +168,7 @@ btnCancelEdit.addEventListener("click", ()=>{
     document.getElementById('ingmeasureedit').value = '';
     document.getElementById('inggramsedit').value = '';
     document.getElementById('ingalertedit').value = '';
-    document.getElementById('ingcategoryedit').value = '';
+    document.getElementById('category-select-edit').selectedIndex = -1;
 })
 
 btnSaveEdit.addEventListener("click", async ()=>{
@@ -145,17 +177,17 @@ btnSaveEdit.addEventListener("click", async ()=>{
     const measure = document.getElementById('ingmeasureedit');
     const grams = document.getElementById('inggramsedit');
     const alert = document.getElementById('ingalertedit');
-    const category = document.getElementById('ingcategoryedit');
+    const category = document.getElementById('category-select-edit');
 
     try{
         console.log("lets save edit" + id);
         await updateIngredient(id, {
             name: name.value,
-            quantity: quantity.value,
-            measure: measure.value,
-            grams: grams.value,
-            alert: alert.value,
             category: category.value,
+            quantity: quantity.value,
+            grams: grams.value,
+            measure: measure.value,
+            alert: alert.value,
           });
         id = "";
         Swal.fire(
@@ -172,23 +204,4 @@ btnSaveEdit.addEventListener("click", async ()=>{
     }
 })
 
-//Eliminar ingrediente old
-/*btnDeleteIngredient.addEventListener("click", async () => {
-    try {
-        await deleteIngredient(id);
-        Swal.fire(
-            'ELIMINAR INGREDIENTE',
-            '¡Ingrediente eliminado con exito"',
-            'success'
-        )
-        id = "";
-    } catch (error) {
-        Swal.fire(
-            'ELIMINAR INGREDIENTE',
-            '¡Error al eliminar el ingrediente!',
-            'error'
-        )
-    }
-    
-})*/
 

@@ -14,87 +14,90 @@ const ingredientList = document.querySelector("#ingredient-list");
 const btnSaveNewPlate = document.querySelector("#btn-save-new-plate");
 
 const options = [];
+const measures = [];
 
 const listaPlatos = document.getElementById('listaPlatos')
 //Esto se ejecuta al arrancar la pagina
 window.addEventListener('DOMContentLoaded', async () => {
 
-    onGetPlates((querySnapshot) => {
-      listaPlatos.innerHTML = "";
-    
-        querySnapshot.forEach((doc) => {
+  onGetIngredients((querySnapshot) => {
+    let i = 1;
+    querySnapshot.forEach((doc) => {
+      const ingredient = doc.data();
 
-          const plate = doc.data();
-          console.log(plate);
+      options.push({ value: i, text: ingredient.name, measure: ingredient.measure});
+      i++;
+    });
+  })
 
-          let ingredientesHtml = "";
-          for (let i = 0; i < plate.ingredients.length; i++) {
-            const ingrediente = plate.ingredients[i].name;
-            const cantidad = plate.ingredients[i].quantity;
-            ingredientesHtml += `<li>${ingrediente} - ${cantidad}</li>`;
-          }
-
-          listaPlatos.innerHTML += `
-          <tr>
-            <td>
-              <div class="plato">
-                <h5>${plate.name}</h5>
-              </div>
-            </td>
-            <td>
-              <button class="mostrar-ingredientes">${"Mostrar ingredientes"}</button>
-                <div class="ingredientes oculto">
-                  <ul>
-                  ${ingredientesHtml}
-                  </ul>
-                </div>
-            </td>
-          </tr>`
-        });
-
-        const botonesIngredientes = document.querySelectorAll(".mostrar-ingredientes");
-
-        botonesIngredientes.forEach((boton) => {
-          boton.addEventListener("click", () => {
-            const ingredientes = boton.nextElementSibling;
-            if (ingredientes.classList.contains("oculto")) {
-              ingredientes.classList.remove("oculto");
-            } else {
-              ingredientes.classList.add("oculto");
-            }
-          });
-        });
-    }) 
-    
-    
-
-    // #region Modal añadir plato
-
-    onGetIngredients((querySnapshot) => {
-      let i = 1;
+  onGetPlates((querySnapshot) => {
+    listaPlatos.innerHTML = "";
+  
       querySnapshot.forEach((doc) => {
-        const ingredient = doc.data();
 
-        options.push({ value: i, text: ingredient.name });
-        i++;
+        const plate = doc.data();
+
+        let ingredientesHtml = "";
+        for (let i = 0; i < plate.ingredients.length; i++) {
+          const ingrediente = plate.ingredients[i].name;
+          const cantidad = plate.ingredients[i].quantity;
+          const option = options.find(option => option.text === ingrediente);
+          const measure = option ? option.measure : "";
+          ingredientesHtml += `<li>${ingrediente} - ${cantidad} ${measure}</li>`;
+        }
+
+        listaPlatos.innerHTML += `
+        <tr>
+          <td>
+            <div class="plato">
+              <h5>${plate.name}</h5>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-info mostrar-ingredientes">${"Ingredientes"}</button>
+            <div class="ingredientes oculto">
+              <ul>
+              ${ingredientesHtml}
+              </ul>
+            </div>
+            <td><button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="fa-solid fa-pencil btneditar" data-id="${doc.id}"></i></button></td>
+            <td><button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#eliminarModal"><i class="fa-solid fa-trash btntrash" data-id="${doc.id}"></i></button></td>
+          </td>
+        </tr>`
       });
-    })
+
+      const botonesIngredientes = document.querySelectorAll(".mostrar-ingredientes");
+
+      botonesIngredientes.forEach((boton) => {
+        boton.addEventListener("click", () => {
+          const ingredientes = boton.nextElementSibling;
+          if (ingredientes.classList.contains("oculto")) {
+            ingredientes.classList.remove("oculto");
+          } else {
+            ingredientes.classList.add("oculto");
+          }
+        });
+      });
+  }) 
+  
+  
+
+  // #region Modal añadir plato
+
+  // Añadir un evento click al botón "Añadir ingrediente"
+  addIngredientBtn.addEventListener("click", () => {
+    añadirIngredientes();
+
+  });
+
+  //Boton añadir nuevo plato
+  addPlateBtn.addEventListener("click", () => {
+    resetPlateModal();
+    añadirIngredientes();
     
+  });
 
-    // Añadir un evento click al botón "Añadir ingrediente"
-    addIngredientBtn.addEventListener("click", () => {
-      añadirIngredientes();
-
-    });
-
-    //Boton añadir nuevo plato
-    addPlateBtn.addEventListener("click", () => {
-      resetPlateModal();
-      añadirIngredientes();
-      
-    });
-
-    // #endregion
+  // #endregion
 
 })
 
@@ -133,7 +136,7 @@ function añadirIngredientes() {
   filteredOptions.forEach((option) => {
     const newOption = document.createElement("option");
     newOption.value = option.value;
-    newOption.text = option.text;
+    newOption.text = option.text + " (" + option.measure + ")";
     selectElement.appendChild(newOption);
   });
 
@@ -143,12 +146,18 @@ function añadirIngredientes() {
   inputElement.setAttribute("type", "number");
   inputElement.setAttribute("placeholder", "Cantidad");
 
+
   // Añadir el elemento de selección y el campo de entrada a la nueva fila
   newIngredientRow.appendChild(selectElement);
   newIngredientRow.appendChild(inputElement);
 
   // Añadir la nueva fila a la lista de ingredientes
   ingredientList.appendChild(newIngredientRow);
+
+  // Agregar la medida al valor de la cantidad ingresada
+  inputElement.addEventListener("input", function () {
+  this.value = this.value + " " + option.measure;
+});
 }
 
 function resetPlateModal() {
