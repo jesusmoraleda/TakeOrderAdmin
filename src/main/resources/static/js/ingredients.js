@@ -1,4 +1,4 @@
-import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetCategories } from "./firebase.js"
+import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetIngredientsCategories } from "./firebase.js"
 
 const btnSaveNewIngredient = document.getElementById('btn-save-new-ingredient')
 const btnAddNewIngredient = document.getElementById('btn-add-new-ingredient')
@@ -15,11 +15,8 @@ const categories = [];
 //Esto se ejecuta al arrancar la pagina ¿?
 window.addEventListener('DOMContentLoaded', () => {
 
-    onGetCategories((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const category = doc.data();
-          categories.push(category.name);
-        });
+    onGetIngredientsCategories((querySnapshot) => {
+        addIngredientsCategories(querySnapshot);
     })
 
     onGetIngredients((querySnapshot) => {
@@ -40,9 +37,11 @@ window.addEventListener('DOMContentLoaded', () => {
           </tr>`
         });
         
-        // Ordenar por nombre por defecto
+        // Ordenar la tabla por nombre por defecto
         sortTable(0);
+        
 
+        //Botones eliminar ingrediente
         const btnsDelete = listaIngredientes.querySelectorAll(".btntrash");
 
         btnsDelete.forEach((btn) =>
@@ -79,6 +78,8 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         );
 
+
+        //Botones editar ingredientes
         const btnsEdit = listaIngredientes.querySelectorAll(".btneditar");
 
         btnsEdit.forEach((btn) => {
@@ -112,7 +113,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
     })
-
     
 })
 
@@ -123,25 +123,25 @@ btnAddNewIngredient.addEventListener("click", ()=>{
     document.getElementById('ingmeasure').value = '';
     document.getElementById('inggrams').value = '';
     document.getElementById('ingalert').value = '';
-    document.getElementById('category-select').selectedIndex = -1;
+    document.getElementById('category-select').selectedIndex = 0;
 
-    const select = document.querySelector('#category-select');
+    /*const select = document.querySelector('#category-select');
     categories.forEach(category => {
         const option = document.createElement('option');
         option.textContent = category;
         select.appendChild(option);
-    });
+    });*/
 
 
 })
 
+//Guardar ingrediente
 btnSaveNewIngredient.addEventListener("click", ()=>{
     const name = document.getElementById('ingname').value;
     const quantity = parseInt(document.getElementById('ingquantity').value);
     const measure = document.getElementById('ingmeasure').value;
     const grams = parseInt(document.getElementById('inggrams').value);
     const alert = parseInt(document.getElementById('ingalert').value);
-    console.log(document.getElementById('category-select'));
     const category = document.getElementById('category-select').value;
 
     try{
@@ -168,9 +168,10 @@ btnCancelEdit.addEventListener("click", ()=>{
     document.getElementById('ingmeasureedit').value = '';
     document.getElementById('inggramsedit').value = '';
     document.getElementById('ingalertedit').value = '';
-    document.getElementById('category-select-edit').selectedIndex = -1;
+    document.getElementById('category-select-edit').selectedIndex = 0;
 })
 
+//Guardar edit de ingrediente
 btnSaveEdit.addEventListener("click", async ()=>{
     const name = document.getElementById('ingnameedit');
     const quantity = document.getElementById('ingquantityedit');
@@ -203,5 +204,24 @@ btnSaveEdit.addEventListener("click", async ()=>{
         )
     }
 })
+
+function addIngredientsCategories(querySnapshot){
+    if(categories.length < 1){
+        querySnapshot.forEach((doc) => {
+            const category = doc.data();
+            categories.push(category.name);
+        });
+
+        document.getElementById('category-select').selectedIndex = 0;
+
+        const select = document.querySelector('#category-select');
+
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.textContent = category;
+            select.appendChild(option);
+        });
+    }
+}
 
 

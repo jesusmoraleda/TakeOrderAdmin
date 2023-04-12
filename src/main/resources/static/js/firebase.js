@@ -52,12 +52,12 @@ export const updateIngredient = (id, newFields) =>
 
 
 //Plates
-export const savePlate = (name, available, ingredients) => {
+export const savePlate = (name, available, category, ingredients) => {
   const ingredientsData = ingredients.map(ingredient => ({
     name: ingredient.name,
-    quantity: ingredient.quantity
+    quantity: ingredient.quantity,
   }));
-  addDoc(collection(db, "plates"), { name, available, ingredients: ingredientsData});
+  addDoc(collection(db, "plates"), { name, available, category, ingredients: ingredientsData});
 }
 
 export const getPlates = () => getDocs(collection(db, 'plates'))
@@ -75,5 +75,8 @@ export const updatePlate = (id, newFields) =>
 
 //Categories
 
-export const onGetCategories = (callback) => 
+export const onGetIngredientsCategories = (callback) => 
   onSnapshot(collection(db, "ingredient_categories"), callback);
+
+export const onGetPlatesCategories = (callback) => 
+  onSnapshot(collection(db, "plates_categories"), callback);
