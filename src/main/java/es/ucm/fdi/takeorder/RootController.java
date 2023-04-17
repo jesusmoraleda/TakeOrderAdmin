@@ -13,16 +13,21 @@ public class RootController {
     }
 
     @GetMapping("/ingredients")
-    public String peliculas(Model model) {
+    public String ingredients(Model model) {
         return "pages/ingredients";
     }
 
     @GetMapping("/plates")
-    public String cines(Model model) {
+    public String plates(Model model) {
         return "pages/plates";
+    }
+    @GetMapping("/menus")
+    public String menus(Model model) {
+        return "pages/menus";
     }
     @GetMapping("/test")
     public String test(Model model) {
         return "pages/test";
     }
+    
 }

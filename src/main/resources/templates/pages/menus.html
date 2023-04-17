@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <head th:replace="fragments/_header :: head(pageTitle='Menu')">
+</head>
+
+<body class="d-flex flex-column h-100">
+  <header th:replace="fragments/_nav.html :: nav"></header>
+
+
+  <div class="contenedor">
+    <div class="small-columna">
+      <h5 class="custom-title">Primeros platos</h5>
+      <div class="custom-table-container">
+        <table class="table" id="primeros_table">
+          <thead class="thead-dark"> 
+          </thead>
+          <tbody id="menus_primeros">
+            <tr>
+                <td>No hay primeros disponibles</td>
+                <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+                <td width="10%" class="btn-cell"><button><i class="fa-solid fa-minus btntrash"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <br />
+
+      <h5 class="custom-title">Segundos platos</h5>
+      <div class="custom-table-container">
+        <table class="table" id="segundos_table">
+          <thead class="thead-dark">
+          </thead>
+          <tbody id="menus_segundos">
+            <tr>
+                <td>No hay segundos platos disponibles</td>
+                <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+                <td width="10%" class="btn-cell"><button><i class="fa-solid fa-minus btntrash"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <br />
+
+      <h5 class="custom-title">Postres</h5>
+      <div class="custom-table-container">
+        <table class="table" id="postres_table">
+          <thead class="thead-dark">
+          </thead>
+          <tbody id="menus_postres">
+            <tr>
+                <td>No hay postres disponibles</td>
+                <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+                <td width="10%" class="btn-cell"><button><i class="fa-solid fa-minus btntrash"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="columna">
+      <!--Menu-->
+      <section class="wrap menu">
+        <h2 class="menu-title">Menú del dia</h2>
+        <div class="column-3 columns">
+          <div class="menu-restaurante" style="background: url(/img/fondo-menu-restaurante.jpg) center;background-size: cover;">
+            <!--<h3>Menú del dia</h3>
+            <hr>-->
+            <h4 class="menu-category" id="menu_primeros">Primeros Platos</h4>
+            <div id="menu_primeros_container"></div>
+            <br>
+            <h4 class="menu-category" id="menu_segundos">Segundos Platos</h4>
+            <div id="menu_segundos_container"></div>
+            <br>
+            <h4 class="menu-category" id="menu_postres">Postres</h4>
+            <div id="menu_postres_container"></div>
+            <br>
+            <p class="precio-menu">
+              Precio:
+              <span>17€</span>
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  
+
+  <script>
+    function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("menu-table");
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "asc";
+      /* Cambiar el color de las letras de la cabecera de la columna seleccionada */
+      var headers = table.getElementsByTagName("th");
+      for (i = 0; i < headers.length; i++) {
+        if (i === n) {
+          headers[i].style.color = "red";
+        } else {
+          headers[i].style.color = "black";
+        }
+      }
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++;
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+  </script>
+  <script th:src="@{/js/menus.js}" type="module"></script>
+
+</body>
+
+</html>

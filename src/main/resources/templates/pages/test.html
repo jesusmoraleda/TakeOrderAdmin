@@ -6,50 +6,193 @@
     
 </head>
 
-<body class="d-flex flex-column h-100">
+<body>
     <header th:replace="fragments/_nav.html :: nav"></header>
 
-    <td><button type="button" id="btn-abrir-modal" class="btn-primary">Añadir nuevo ingrediente</button></td>
+    <div class="contenedor">
+      <div class="small-columna">
+        <h5 class="custom-title">Entrantes</h5>
+        <div class="custom-table-container">
+          <table class="table" id="menus_entrantes_table">
+            <thead class="thead-dark">
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </thead>
+            <tbody id="menus_entrantes">
+              <tr>
+                  <td>Plato1</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Plato2</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Plato3</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Plato4</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Plato5</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Plato6</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <div id="ingredients-container"></div>
+        <br />
 
-    <dialog id="modal">
-      <!--<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-              <div class="modal-header modheader">
-                <h5 class="modal-title text-light" id="exampleModalLabel">Gestionar Usuario</h5>
-                <button id="btn-cerrar-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body modbody">
-                  <form class=" d-flex flex-column align-items-center formusuario" id="ingredient-form" method="post">
-                      <div class="d-flex justify-content-between mt-5">
-                        <p>
-                          <label for="title">Nombre:</label>
-                          <input type="text" placeholder="Nombre del ingrediente" id="ingredient-title" required="required">
-                        </p>
-                        <p class="ms-4">
-                          <label for="quantity">Cantidad:</label>
-                          <input type ="text" placeholder="Cantidad" id="ingredient-quantity" required="required"></input>
-                        </p>
-                      </div>
-                      <div class="d-flex justify-content-between mt-2">
-                        <p>
-                          <label for="measure">Medida:</label>
-                          <input type="text" placeholder="Medida (kgs, g, litros...)" id="ingredient-measure" required="required">
-                        </p>
-                        <p class="ms-4">
-                          <label for="alert">Alerta:</label>
-                          <input type="text" placeholder="Cantidad minima" id="ingredient-alert" required="required">
-                        </p>
-                      </div>
-                      <button id="btn-ingredient-form" type="submit">Guardar</button>
-                  </form>
-              </div>
+        <h5 class="custom-title">Primeros platos</h5>
+        <div class="custom-table-container">
+          <table class="table" id="menus_primeros_table">
+            <thead class="thead-dark"> 
+            </thead>
+            <tbody id="menus_primeros">
+              <tr>
+                  <td>Primeros1</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Primeros2</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Primeros3</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Primeros4</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Primeros5</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Primeros6</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <br />
+
+        <h5 class="custom-title">Segundos platos</h5>
+        <div class="custom-table-container">
+          <table class="table" id="menus_segundos_table">
+            <thead class="thead-dark">
+            </thead>
+            <tbody id="menus_segundos">
+              <tr>
+                  <td>Segundos1</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Segundos2</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Segundos3</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Segundos4</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Segundos5</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Segundos6</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <br />
+
+        <h5 class="custom-title">Postres</h5>
+        <div class="custom-table-container">
+          <table class="table" id="menus_postres_table">
+            <thead class="thead-dark">
+            </thead>
+            <tbody id="menus_postres">
+              <tr>
+                  <td>Postres1</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Postres2</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Postres3</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Postres4</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Postres5</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+              <tr>
+                  <td>Postres6</td>
+                  <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="columna">
+        <!--Menu-->
+        <section class="wrap menu">
+          <h2 class="menu-title">Menú del dia</h2>
+          <div class="column-3 columns">
+            <div class="menu-restaurante" style="background: url(/img/fondo-menu-restaurante.jpg) center;background-size: cover;">
+              <!--<h3>Menú del dia</h3>
+              <hr>-->
+              <h4>Primeros Platos</h4>
+              <p>Lorem, ipsum dolor.</p>
+              <p>Lorem ipsum dolor sit amet.</p>
+              <p>Lorem, ipsum dolor.</p>
+              <p>Lorem ipsum dolor sit.</p>
+              <br>
+              <h4>Segundos Platos</h4>
+              <p>Lorem, ipsum dolor.</p>
+              <p>Lorem ipsum dolor sit amet.</p>
+              <p>Lorem, ipsum dolor.</p>
+              <p>Lorem ipsum dolor sit.</p>
+              <br>
+              <h4>Postres</h4>
+              <p>Lorem, ipsum dolor.</p>
+              <p>Lorem ipsum dolor sit amet.</p>
+              <p>Lorem, ipsum dolor.</p>
+              <p>Lorem ipsum dolor sit.</p>
+              <br>
+              <p class="precio-menu">
+                Precio:
+                <span>17€</span>
+              </p>
             </div>
           </div>
-        <!--</div>-->
-    </dialog>
+        </section>
+      </div>
+
+      
+    </div>
     <script th:src="@{/js/test.js}" type="module"></script>
     
 </body>

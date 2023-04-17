@@ -14,7 +14,7 @@ const ingredientList = document.querySelector("#ingredient-list");
 const btnSaveNewPlate = document.querySelector("#btn-save-new-plate");
 
 const checkbox = document.getElementById('plateavailable');
-const listaPlatos = document.getElementById('listaPlatos')
+const listaPlatos = document.getElementById('listaPlatos');
 
 const options = [];
 const measures = [];
@@ -64,7 +64,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           </td>
           <td>
             <div class="plato">
-              <h7>${"Primer plato"}</h7>
+              <h7>${plate.category}</h7>
             </div>
           </td>
           <td>
@@ -123,6 +123,8 @@ btnSaveNewPlate.addEventListener("click", async () => {
   const name = document.getElementById('platename').value;
   const available = Boolean(document.getElementById('plateavailable').value);
   const category = document.getElementById('platecategory').value;
+  console.log(category);
+  const amount = 200;
 
   //Seleccionar todos los ingredientes del plato
   const ingredientSelects = ingredientList.querySelectorAll('select');
@@ -143,7 +145,7 @@ btnSaveNewPlate.addEventListener("click", async () => {
   }
 
   try {
-    await savePlate(name, available, category, ingredients);
+    await savePlate(name, available, category, amount, ingredients);
     Swal.fire(
       'AÑADIR PLATO',
       'Plato añadido con éxito!',
@@ -210,7 +212,7 @@ checkbox.addEventListener('change', function() {
     // Crear un nuevo campo de entrada para la cantidad
     const inputElement = document.createElement("input");
     inputElement.className = "form-control";
-    inputElement.setAttribute("type", "number");
+    inputElement.setAttribute("type", "float");
     inputElement.setAttribute("placeholder", "Cantidad");
   
   

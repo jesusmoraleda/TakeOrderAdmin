@@ -13,6 +13,8 @@ import {
   doc,
   getDoc,
   updateDoc,
+  query,
+  where,
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -52,18 +54,21 @@ export const updateIngredient = (id, newFields) =>
 
 
 //Plates
-export const savePlate = (name, available, category, ingredients) => {
+export const savePlate = (name, available, category, amount, ingredients) => {
   const ingredientsData = ingredients.map(ingredient => ({
     name: ingredient.name,
     quantity: ingredient.quantity,
   }));
-  addDoc(collection(db, "plates"), { name, available, category, ingredients: ingredientsData});
+  addDoc(collection(db, "plates"), { name, available, category, amount, ingredients: ingredientsData});
 }
 
 export const getPlates = () => getDocs(collection(db, 'plates'))
 
 export const onGetPlates = (callback) => 
   onSnapshot(collection(db, "plates"), callback);
+
+  export const onGetPlatesByCategory = (category, callback) =>
+  onSnapshot(query(collection(db, "plates"), where("category", "==", category)), callback);
 
 export const deletePlate = (id) => 
   deleteDoc(doc(db, "plates", id));

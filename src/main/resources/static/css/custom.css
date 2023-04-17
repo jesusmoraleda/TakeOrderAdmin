@@ -73,6 +73,10 @@ table .btntrash {
     color: red;
     cursor: pointer;
 }
+table .btnadd {
+    color: dodgerblue;
+    cursor: pointer;
+}
 
 .alertTable {
     width: 100px;
@@ -105,4 +109,83 @@ table .btntrash {
 
 .selected {
     color: red;
+}
+
+/*MENUS*/
+.contenedor {
+    display: flex;
   }
+
+.columna {
+    width: 80%;
+}
+.small-columna{
+    width: 30%
+}
+/*Columna tablas menus*/
+.custom-table-container {
+    width: 80%; /* ajusta el ancho de la tabla */
+    margin-left: 120px; /* alinea la tabla a la izquierda */
+    margin-right: auto;
+    height: 200px; /* ajusta la altura de la tabla */
+    overflow-y: scroll; /* añade una barra lateral si la altura de la tabla supera 200px */
+}
+.btn-cell {
+    text-align: right;
+    width: "10%";
+}
+
+.custom-title {
+    margin-left: 120px;
+    color: blue;
+}
+
+html{
+    font-family: system-ui;
+}
+  
+.wrap{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.column-3{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    column-gap: 1rem;
+    row-gap: 1rem;
+}
+
+.menu-restaurante{
+    color: #fff;  
+    text-align: center;
+    background-repeat: no-repeat;
+    border-radius: 6px;
+    display: flex;
+    flex-flow: column;
+}
+
+hr{
+    background: #FFC300;
+    height: 2.5px;
+    width: 30px;
+    border: none;
+}
+
+.precio-menu{
+    font-weight: bold;
+}
+
+.precio-menu span{
+    font-size: 2rem;
+    color: #FFC300;
+}
+
+.menu-title {
+    color: blue;
+    margin-left: 100px;
+}
+
+.menu-category {
+    color: yellow;
+}
+
