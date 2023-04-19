@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for takeorderadmin on 2023-04-19T01:20:08+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "takeorderadmin"
+primary_region = "mad"
+
+[build]
+  image = "jesuschus44/spring-jib:v1"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+
+[checks]
+  [checks.alive]
+    type = "tcp"
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "5s"
