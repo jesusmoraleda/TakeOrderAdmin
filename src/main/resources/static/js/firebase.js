@@ -52,6 +52,12 @@ export const getIngredient = id => getDoc(doc(db, "ingredients", id));
 export const updateIngredient = (id, newFields) =>
   updateDoc(doc(db, "ingredients", id), newFields);
 
+export const onGetIngredientsCategories = (callback) => 
+  onSnapshot(collection(db, "ingredient_categories"), callback);
+
+export const onGetIngredientsMeasures = (callback) => 
+  onSnapshot(collection(db, "ingredient_measures"), callback);
+
 
 //Plates
 export const savePlate = (name, available, category, amount, ingredients) => {
@@ -77,11 +83,6 @@ export const getPlate = id => getDoc(doc(db, "plates", id));
 
 export const updatePlate = (id, newFields) =>
   updateDoc(doc(db, "plates", id), newFields);
-
-//Categories
-
-export const onGetIngredientsCategories = (callback) => 
-  onSnapshot(collection(db, "ingredient_categories"), callback);
 
 export const onGetPlatesCategories = (callback) => 
   onSnapshot(collection(db, "plates_categories"), callback);

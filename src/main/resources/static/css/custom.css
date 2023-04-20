@@ -47,23 +47,7 @@
     max-height: fit-content;
 }
 
-#btn-abrir-modal {
-    width: 350px;
-    -webkit-border-radius: 28;
-    -moz-border-radius: 28;
-    border-radius: 28px;
-    text-shadow: 3px 2px 1px #9daef5;
-    -webkit-box-shadow: 6px 5px 24px #666666;
-    -moz-box-shadow: 6px 5px 24px #666666;
-    box-shadow: 6px 5px 24px #666666;
-    font-family: Arial;
-    color: #fafafa;
-    font-size: 27px;
-    padding: 19px;
-    text-decoration: none;
-    margin-left: 50%;
-    transform: translateX(-50%); 
-}
+/*Tablas*/
 
 table .btneditar {
     color: dodgerblue;
@@ -88,21 +72,6 @@ table .btnadd {
     color: red;
     text-align: left;
 }
-
-/*Plates*/
-.plato {
-    display: flex;
-    align-items: center;
-  }
-
-  .plato h3 {
-    margin-right: 10px;
-  }
-
-  .oculto {
-    display: none;
-  }
-
 .sortable {
     cursor: pointer; /* cambia el cursor del ratón a la forma de un ícono de pulsar */
 }
@@ -111,17 +80,46 @@ table .btnadd {
     color: red;
 }
 
-/*MENUS*/
-.contenedor {
+/*Platos*/
+.plato {
     display: flex;
+    align-items: center;
+  }
+
+.plato h3 {
+    margin-right: 10px;
+}
+
+.oculto {
+    display: none;
+}
+
+/*MENUS*/
+@media only screen and (max-width: 600px) {
+    /* estilos para dispositivos móviles con ancho máximo de pantalla de 600px */
+    .columna-2 {
+      margin-left: 0;
+      padding-left: 0;
+    }
+}
+.contenedor {
+    display:flex;
+    justify-content: space-between;
   }
 
 .columna {
-    width: 80%;
+    width: 30%;
+    margin-right: 1%;
 }
+
+.columna:last-child {
+    margin-right: 0;
+}
+
 .small-columna{
     width: 30%
 }
+
 /*Columna tablas menus*/
 .custom-table-container {
     width: 80%; /* ajusta el ancho de la tabla */
@@ -147,12 +145,6 @@ html{
 .wrap{
     max-width: 1200px;
     margin: 0 auto;
-}
-.column-3{
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    column-gap: 1rem;
-    row-gap: 1rem;
 }
 
 .menu-restaurante{
@@ -182,7 +174,7 @@ hr{
 
 .menu-title {
     color: blue;
-    margin-left: 100px;
+    text-align: center;
 }
 
 .menu-category {

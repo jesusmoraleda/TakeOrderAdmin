@@ -1,4 +1,4 @@
-import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetIngredientsCategories } from "./firebase.js"
+import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetIngredientsCategories, onGetIngredientsMeasures } from "./firebase.js"
 
 const btnSaveNewIngredient = document.getElementById('btn-save-new-ingredient')
 const btnAddNewIngredient = document.getElementById('btn-add-new-ingredient')
@@ -10,6 +10,7 @@ const listaIngredientes = document.getElementById('listaIngredientes')
 let id = '';
 
 const categories = [];
+const measures = [];
 
 
 //Esto se ejecuta al arrancar la pagina ¿?
@@ -17,6 +18,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     onGetIngredientsCategories((querySnapshot) => {
         addIngredientsCategories(querySnapshot);
+    })
+    onGetIngredientsMeasures((querySnapshot) => {
+        addIngredientsMeasures(querySnapshot);
     })
 
     onGetIngredients((querySnapshot) => {
@@ -219,6 +223,25 @@ function addIngredientsCategories(querySnapshot){
         categories.forEach(category => {
             const option = document.createElement('option');
             option.textContent = category;
+            select.appendChild(option);
+        });
+    }
+}
+
+function addIngredientsMeasures(querySnapshot){
+    if(measures.length < 1){
+        querySnapshot.forEach((doc) => {
+            const measure = doc.data();
+            measures.push(measure.name);
+        });
+
+        document.getElementById('measure-select').selectedIndex = 0;
+
+        const select = document.querySelector('#measure-select');
+
+        measures.forEach(measure => {
+            const option = document.createElement('option');
+            option.textContent = measure;
             select.appendChild(option);
         });
     }
