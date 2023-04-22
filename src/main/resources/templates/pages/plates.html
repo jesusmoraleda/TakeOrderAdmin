@@ -10,8 +10,21 @@
 
   <br />
 
-  <div class="container">
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#añadirPlato" id="btn-add-new-plate"><i class="fas fa-plus"></i> Añadir nuevo plato</button>
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirPlato" id="btn-add-new-plate">
+      <i class="fas fa-plus"></i> Añadir nuevo plato
+    </button>
+    <div class="form-group">
+      <label for="filter-categories">Filtrar por categoría:</label>
+      <select class="form-select" id="filter-categories">
+        <option value="">Todas las categorías</option>
+        <!-- Agrega más opciones de categorías aquí -->
+      </select>
+    </div>
+    <div>
+      <input type="text" id="buscarInput" placeholder="Buscar plato">
+      <button class="btn btn-info">Buscar</button>
+    </div>
   </div>
 
   <br />

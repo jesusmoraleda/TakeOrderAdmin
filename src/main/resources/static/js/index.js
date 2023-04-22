@@ -1,4 +1,4 @@
-import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient } from "./firebase.js"
+import { onGetIngredients } from "./firebase.js"
 
 const listaAlertas = document.getElementById('listaAlertas')
 

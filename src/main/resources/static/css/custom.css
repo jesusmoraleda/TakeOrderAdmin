@@ -80,6 +80,10 @@ table .btnadd {
     color: red;
 }
 
+.resaltado {
+    background-color: yellow;
+}
+
 /*Platos*/
 .plato {
     display: flex;

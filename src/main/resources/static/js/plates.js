@@ -47,8 +47,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     añadirPlatesCategories(querySnapshot);
   })
 
-  
-
   onGetPlates((querySnapshot) => {
     listaPlatos.innerHTML = "";
   
@@ -182,7 +180,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       );
   }) 
 
-  // #region Modal añadir plato
+  añadirBuscador();
+    
+  añadirFiltro();
 
   // Añadir un evento click al botón "Añadir ingrediente"
   addIngredientBtn.addEventListener("click", () => {
@@ -196,17 +196,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     añadirPlatesCategories();
   });
 
-  // #endregion
-
-  
-
 })
 
-// #region Modal añadir plato
+//Boton cancelar añadir plato
 btnCancelNewPlate.addEventListener("click", async () => {
   resetPlateModal();
 })
 
+//Boton guardar nuevo plato
 btnSaveNewPlate.addEventListener("click", async () => {
   const name = document.getElementById('platename').value;
   const available = Boolean(document.getElementById('plateavailable').value);
@@ -241,14 +238,14 @@ btnSaveNewPlate.addEventListener("click", async () => {
     return;
   }
 
-  if (nombreExistente(name)) {
+  /*if (nombreExistente(name)) {
       Swal.fire(
           'AÑADIR PLATO',
           '¡No puede haber dos platos con el mismo nombre!',
           'error'
       );
       return;
-  }
+  }*/
 
   try {
     await savePlate(name, available, category, amount, ingredients);
@@ -267,14 +264,13 @@ btnSaveNewPlate.addEventListener("click", async () => {
   }
 });
 
-// #endregion
 
-// #region Modal editar plato
-
+//Boton cancelar editar plato
 btnCancelEditPlate.addEventListener("click", async () => {
   resetPlateModalEdit();
 })
 
+//Boton guardar edit plato
 btnSaveEditPlate.addEventListener("click", async () => {
   const name = document.getElementById('platenameedit').value;
   const available = Boolean(document.getElementById('plateavailableedit').value);
@@ -307,15 +303,14 @@ btnSaveEditPlate.addEventListener("click", async () => {
     );
     return;
   }
-
-  /*if (nombreExistente(name)) {
+    /*if (nombreExistente(name)) {
       Swal.fire(
           'AÑADIR PLATO',
           '¡No puede haber dos platos con el mismo nombre!',
           'error'
       );
       return;
-  }*/
+    }*/
   
   try {
     await updatePlate(id, {
@@ -340,8 +335,6 @@ btnSaveEditPlate.addEventListener("click", async () => {
     );
   }
 });
-
-// #endregion
 
 
 checkbox.addEventListener('change', function() {
@@ -425,6 +418,7 @@ function resetPlateModal() {
     ingredientList.removeChild(ingredientList.firstChild);
   }
 }
+
 function resetPlateModalEdit() {
   document.getElementById('platenameedit').value = '';
   document.getElementById('platecategoryedit').selectedIndex = 0;
@@ -443,10 +437,15 @@ function añadirPlatesCategories(querySnapshot) {
 
     document.getElementById('platecategory').selectedIndex = 0;
     const select = document.querySelector('#platecategory');
+
+    document.getElementById('filter-categories').selectedIndex = 0;
+    const filter = document.querySelector('#filter-categories');
+
     categories.forEach(category => {
         const option = document.createElement('option');
         option.textContent = category;
         select.appendChild(option);
+        filter.appendChild(option);
     });
   }
     
@@ -480,5 +479,62 @@ function rellenarDesplegables(){
   addIngredientBtnEdit.addEventListener("click", () => {
     añadirIngredientes(undefined, undefined,true);
   });
+
+}
+
+function añadirBuscador(){
+  const buscarInput = document.getElementById('buscarInput');
+
+  buscarInput.addEventListener('input', () => {
+    const busqueda = buscarInput.value.toLowerCase();
+    // Lógica de búsqueda...
+    // Obtiene todas las filas de la tabla
+    var filas = document.getElementById("plates-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
   
+    // Itera sobre cada fila de la tabla
+    for (var i = 0; i < filas.length; i++) {
+      var nombre = filas[i].getElementsByTagName("td")[0];
+      var categoria = filas[i].getElementsByTagName("td")[1];
+  
+      // Comprueba si alguna fila contiene la búsqueda
+      if (busqueda.length === 0 || nombre.innerHTML.toLowerCase().indexOf(busqueda) > -1) {
+        // Si la fila contiene la búsqueda, muestra la fila y resáltala
+        filas[i].style.display = "";
+        if (busqueda.length > 0) {
+          filas[i].classList.add("resaltado");
+        } else {
+          filas[i].classList.remove("resaltado");
+        }
+      } else {
+        // Si la fila no contiene la búsqueda, ocúltala y elimina el resaltado
+        filas[i].style.display = "none";
+        filas[i].classList.remove("resaltado");
+      }
+    }
+  });
+}
+
+function añadirFiltro(){
+  const categoriaSelect = document.getElementById('filter-categories');
+
+  categoriaSelect.addEventListener('change', () => {
+      const categoriaSeleccionada = categoriaSelect.value.toLowerCase();
+    
+      // Obtiene todas las filas de la tabla
+      const filas = document.getElementById("plates-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    
+      // Itera sobre cada fila de la tabla
+      for (let i = 0; i < filas.length; i++) {
+        const categoria = filas[i].getElementsByTagName("td")[1].textContent.toLowerCase();
+    
+        // Comprueba si la categoría de la fila coincide con la categoría seleccionada o si se seleccionó "Todas"
+        if (categoria === categoriaSeleccionada || categoriaSeleccionada === '') {
+          // Si la fila coincide con la categoría seleccionada o se seleccionó "Todas", muestra la fila
+          filas[i].style.display = "";
+        } else {
+          // Si la fila no coincide con la categoría seleccionada, ocúltala
+          filas[i].style.display = "none";
+        }
+      }
+  });
 }
