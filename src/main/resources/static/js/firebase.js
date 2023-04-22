@@ -6,7 +6,6 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.1/firebase
 import {
   getFirestore,
   collection,
-  getDocs,
   onSnapshot,
   addDoc,
   deleteDoc,
@@ -15,6 +14,7 @@ import {
   updateDoc,
   query,
   where,
+  orderBy,
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -36,13 +36,11 @@ export const analytics = getAnalytics(app);
 export const db = getFirestore();
 
 //Ingredients
-export const saveIngredient = (name,category,quantity,grams,measure,alert) =>
-  addDoc(collection(db, "ingredients"), { name,category,quantity,grams,measure,alert});
-
-export const getIngredients = () => getDocs(collection(db, 'ingredients'))
+export const saveIngredient = (name,category,quantity,measure,alert) =>
+  addDoc(collection(db, "ingredients"), { name,category,quantity,measure,alert});
 
 export const onGetIngredients = (callback) => 
-  onSnapshot(collection(db, "ingredients"), callback);
+onSnapshot(query(collection(db, "ingredients"), orderBy("name")), callback);
 
 export const deleteIngredient = (id) => 
   deleteDoc(doc(db, "ingredients", id));
@@ -53,10 +51,10 @@ export const updateIngredient = (id, newFields) =>
   updateDoc(doc(db, "ingredients", id), newFields);
 
 export const onGetIngredientsCategories = (callback) => 
-  onSnapshot(collection(db, "ingredient_categories"), callback);
+  onSnapshot(query(collection(db, "ingredient_categories"), orderBy("name")), callback);
 
 export const onGetIngredientsMeasures = (callback) => 
-  onSnapshot(collection(db, "ingredient_measures"), callback);
+onSnapshot(query(collection(db, "ingredient_measures"), orderBy("name")), callback);
 
 
 //Plates
@@ -68,12 +66,10 @@ export const savePlate = (name, available, category, amount, ingredients) => {
   addDoc(collection(db, "plates"), { name, available, category, amount, ingredients: ingredientsData});
 }
 
-export const getPlates = () => getDocs(collection(db, 'plates'))
-
 export const onGetPlates = (callback) => 
-  onSnapshot(collection(db, "plates"), callback);
+onSnapshot(query(collection(db, "plates"), orderBy("name")), callback);
 
-  export const onGetPlatesByCategory = (category, callback) =>
+export const onGetPlatesByCategory = (category, callback) =>
   onSnapshot(query(collection(db, "plates"), where("category", "==", category)), callback);
 
 export const deletePlate = (id) => 
@@ -85,4 +81,4 @@ export const updatePlate = (id, newFields) =>
   updateDoc(doc(db, "plates", id), newFields);
 
 export const onGetPlatesCategories = (callback) => 
-  onSnapshot(collection(db, "plates_categories"), callback);
+  onSnapshot(query(collection(db, "plates_categories"), orderBy("name")), callback);

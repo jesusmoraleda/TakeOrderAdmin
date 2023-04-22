@@ -1,4 +1,4 @@
-import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetIngredientsCategories, onGetIngredientsMeasures } from "./firebase.js"
+import { saveIngredient, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetIngredientsCategories, onGetIngredientsMeasures } from "./firebase.js"
 
 const btnSaveNewIngredient = document.getElementById('btn-save-new-ingredient')
 const btnAddNewIngredient = document.getElementById('btn-add-new-ingredient')
@@ -7,11 +7,11 @@ const btnCancelEdit = document.getElementById('btn-cancel-edit')
 const btnSaveEdit = document.getElementById('btn-save-edit')
 const listaIngredientes = document.getElementById('listaIngredientes')
 
-let id = '';
+let id = ''; //Para editar ?
 
 const categories = [];
 const measures = [];
-
+const ingredients = [];
 
 //Esto se ejecuta al arrancar la pagina ¿?
 window.addEventListener('DOMContentLoaded', () => {
@@ -28,12 +28,12 @@ window.addEventListener('DOMContentLoaded', () => {
     
         querySnapshot.forEach((doc) => {
           const ingredient = doc.data();
+          ingredients.push(ingredient.name);
           listaIngredientes.innerHTML += `
           <tr>
             <td>${ingredient.name}</td>
             <td>${ingredient.category}</td>
             <td>${ingredient.quantity}</td>
-            <td>${ingredient.grams}</td>
             <td>${ingredient.measure}</td>
             <td>${ingredient.alert}</td>
             <td align="center"><button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="fa-solid fa-pencil btneditar" data-id="${doc.id}"></i></button></td>
@@ -42,6 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         
         // Ordenar la tabla por nombre por defecto
+        sortTable(0);
         sortTable(0);
         
 
@@ -88,27 +89,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
         btnsEdit.forEach((btn) => {
         btn.addEventListener("click", async (e) => {
+            console.log("He clickado");
             try {
                 const doc = await getIngredient(e.target.dataset.id);
                 const ingredient = doc.data();
-                console.log(ingredient);
+
+                rellenarDesplegables();
+
                 document.getElementById('ingnameedit').value = ingredient.name;
+                document.getElementById('ingcategoryedit').value = ingredient.category;
                 document.getElementById('ingquantityedit').value = ingredient.quantity;
                 document.getElementById('ingmeasureedit').value = ingredient.measure;
-                document.getElementById('inggramsedit').value = ingredient.grams;
                 document.getElementById('ingalertedit').value = ingredient.alert;
-                document.getElementById('category-select-edit').value = ingredient.category;
-
-                
-                const select = document.querySelector('#category-select-edit');
-                categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.textContent = category;
-                    select.appendChild(option);
-                });
 
                 id = doc.id;
-                console.log(id);
 
             } catch (error) {
                 console.log(error);
@@ -124,19 +118,9 @@ window.addEventListener('DOMContentLoaded', () => {
 btnAddNewIngredient.addEventListener("click", ()=>{
     document.getElementById('ingname').value = '';
     document.getElementById('ingquantity').value = '';
-    document.getElementById('ingmeasure').value = '';
-    document.getElementById('inggrams').value = '';
+    document.getElementById('ingmeasure').selectedIndex = 0;
     document.getElementById('ingalert').value = '';
-    document.getElementById('category-select').selectedIndex = 0;
-
-    /*const select = document.querySelector('#category-select');
-    categories.forEach(category => {
-        const option = document.createElement('option');
-        option.textContent = category;
-        select.appendChild(option);
-    });*/
-
-
+    document.getElementById('ingcategory').selectedIndex = 0;
 })
 
 //Guardar ingrediente
@@ -144,12 +128,28 @@ btnSaveNewIngredient.addEventListener("click", ()=>{
     const name = document.getElementById('ingname').value;
     const quantity = parseInt(document.getElementById('ingquantity').value);
     const measure = document.getElementById('ingmeasure').value;
-    const grams = parseInt(document.getElementById('inggrams').value);
     const alert = parseInt(document.getElementById('ingalert').value);
-    const category = document.getElementById('category-select').value;
+    const category = document.getElementById('ingcategory').value;
 
+    if (!name || quantity < 0 || alert < 0) {
+        Swal.fire(
+            'AÑADIR INGREDIENTE',
+            '¡Por favor, completa todos los campos y asegúrate de que la cantidad y la alerta sean valores positivos!',
+            'error'
+        );
+        return;
+    }
+
+    if (nombreExistente(name)) {
+        Swal.fire(
+            'AÑADIR INGREDIENTE',
+            '¡No puede haber dos ingredientes con el mismo nombre!',
+            'error'
+        );
+        return;
+    }
     try{
-        saveIngredient(name,category,quantity,grams,measure,alert);
+        saveIngredient(name,category,quantity,measure,alert);
         Swal.fire(
             'AÑADIR INGREDIENTE',
             '¡Ingrediente añadido con éxito!',
@@ -164,15 +164,13 @@ btnSaveNewIngredient.addEventListener("click", ()=>{
     }
 })
 
-//Editar ingrediente
+//Cancelar edit de ingrediente
 btnCancelEdit.addEventListener("click", ()=>{
-    console.log("close edit");
     document.getElementById('ingnameedit').value = '';
+    document.getElementById('ingmeasureedit').selectedIndex = 0;
     document.getElementById('ingquantityedit').value = '';
-    document.getElementById('ingmeasureedit').value = '';
-    document.getElementById('inggramsedit').value = '';
     document.getElementById('ingalertedit').value = '';
-    document.getElementById('category-select-edit').selectedIndex = 0;
+    document.getElementById('ingcategoryedit').selectedIndex = 0;
 })
 
 //Guardar edit de ingrediente
@@ -180,20 +178,35 @@ btnSaveEdit.addEventListener("click", async ()=>{
     const name = document.getElementById('ingnameedit');
     const quantity = document.getElementById('ingquantityedit');
     const measure = document.getElementById('ingmeasureedit');
-    const grams = document.getElementById('inggramsedit');
     const alert = document.getElementById('ingalertedit');
-    const category = document.getElementById('category-select-edit');
+    const category = document.getElementById('ingcategoryedit');
+
+    if (!name || quantity < 0 || alert < 0) {
+        Swal.fire(
+            'AÑADIR INGREDIENTE',
+            '¡Por favor, completa todos los campos y asegúrate de que la cantidad y la alerta sean valores positivos!',
+            'error'
+        );
+        return;
+    }
+
+    /*if (nombreExistente(name)) {
+        Swal.fire(
+            'AÑADIR INGREDIENTE',
+            '¡No puede haber dos ingredientes con el mismo nombre!',
+            'error'
+        );
+        return;
+    }*/
 
     try{
-        console.log("lets save edit" + id);
         await updateIngredient(id, {
             name: name.value,
             category: category.value,
             quantity: quantity.value,
-            grams: grams.value,
             measure: measure.value,
             alert: alert.value,
-          });
+        });
         id = "";
         Swal.fire(
             'EDITAR INGREDIENTE',
@@ -216,9 +229,9 @@ function addIngredientsCategories(querySnapshot){
             categories.push(category.name);
         });
 
-        document.getElementById('category-select').selectedIndex = 0;
+        document.getElementById('ingcategory').selectedIndex = 0;
 
-        const select = document.querySelector('#category-select');
+        const select = document.querySelector('#ingcategory');
 
         categories.forEach(category => {
             const option = document.createElement('option');
@@ -235,9 +248,9 @@ function addIngredientsMeasures(querySnapshot){
             measures.push(measure.name);
         });
 
-        document.getElementById('measure-select').selectedIndex = 0;
+        document.getElementById('ingmeasure').selectedIndex = 0;
 
-        const select = document.querySelector('#measure-select');
+        const select = document.querySelector('#ingmeasure');
 
         measures.forEach(measure => {
             const option = document.createElement('option');
@@ -248,3 +261,37 @@ function addIngredientsMeasures(querySnapshot){
 }
 
 
+function nombreExistente(name){
+    // Recorrer la lista de ingredientes
+    for (let i = 0; i < ingredients.length; i++) {
+        // Comparar el nombre del ingrediente actual con el nombre del nuevo ingrediente
+        if (ingredients[i].toLowerCase() === name.toLowerCase()) {
+            // Si encontramos un ingrediente con el mismo nombre, devolver true
+            return true;
+        }
+    }
+
+    // Si no se encuentra un ingrediente con el mismo nombre, devolver false
+    return false;
+}
+
+function rellenarDesplegables(){
+    const select = document.querySelector('#ingcategoryedit');
+    if(select.length <= 1){
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.textContent = category;
+            select.appendChild(option);
+        });
+    }
+    
+
+    const selectmeasures = document.querySelector('#ingmeasureedit');
+    measures.forEach(measure => {
+        const option = document.createElement('option');
+        option.textContent = measure;
+        selectmeasures.appendChild(option);
+    });
+    
+
+}

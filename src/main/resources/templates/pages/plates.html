@@ -22,6 +22,7 @@
         <tr>
           <th scope="col" onclick="sortTable(0)" class="sortable active">Nombre del plato</th>
           <th scope="col" onclick="sortTable(1)" class="sortable active">Categoria</th>
+          <th scope="col" onclick="sortTable(2)" class="sortable active">Cantidad</th>
           <th scope="col">Ingredientes</th>
           <th scope="col">Editar</th>
           <th scope="col">Eliminar</th>
@@ -43,7 +44,7 @@
         <div class="modal-body">
           <input type="text" id="platename" class="form-control" placeholder="Nombre" required="required">
           <br />
-          <select id="platecategory" class="form-select">
+          <select id="platecategory" class="form-select" required="required">
             <option value="">Categoría</option>
           </select>
           <br />
@@ -54,15 +55,57 @@
             </div>
           </div>
           <hr>
-            <h6>Ingredientes:</h6>
-            <div id="ingredient-list">
-            </div>
-            <button type="button" class="btn btn-primary mt-3" id="add-ingredient">Añadir ingrediente</button>
+          <h6>Ingredientes:</h6>
+          <div id="ingredient-list">
+          </div>
+          <button type="button" class="btn btn-primary mt-3" id="add-ingredient">Añadir ingrediente</button>
           <br />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-cancel-new-plate"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-save-new-plate"><i class="fa-regular fa-floppy-disk"></i>  Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR PLATO-->
+  <div class="modal fade" id="editarPlato" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"> Editar plato</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="platenameedit">Nombre:</label>
+            <input type="text" id="platenameedit" class="form-control" placeholder="Nombre" required="required" readonly>
+          </div>
+          <br/>
+          <div class="form-group">
+            <label for="platecategoryedit">Categoría:</label>
+            <select id="platecategoryedit" class="form-select" required="required">
+              <option value="">Categoría</option>
+            </select>
+          </div>
+          <br/>
+          <div class="form-group">
+            <label for="plateavailableedit">Disponible:</label>
+            <div class="form-check form-switch form-check-inline">
+              <input type="checkbox" id="plateavailableedit" class="form-check-input">
+            </div>
+          </div>
+          <hr>
+          <h6>Ingredientes:</h6>
+          <div id="ingredient-list-edit">
+          </div>
+          <button type="button" class="btn btn-primary mt-3" id="add-ingredient-edit">Añadir ingrediente</button>
+          <br />
+          <br/>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-cancel-edit"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-save-edit"><i class="fa-regular fa-floppy-disk"></i>  Guardar</button>
         </div>
       </div>
     </div>

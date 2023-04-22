@@ -25,9 +25,8 @@
             <th scope="col" onclick="sortTable(0)" class="sortable active">NOMBRE</th>
             <th scope="col" onclick="sortTable(1)" class="sortable active">CATEGORIA</th>
             <th scope="col" onclick="sortTable(2)" class="sortable active">UNIDADES</th>
-            <th scope="col" onclick="sortTable(3)" class="sortable active">GRAMOS POR UNIDAD</th>
-            <th scope="col" onclick="sortTable(4)" class="sortable active">MEDIDA</th>
-            <th scope="col" onclick="sortTable(5)" class="sortable active">ALERTA</th>
+            <th scope="col" onclick="sortTable(3)" class="sortable active">MEDIDA</th>
+            <th scope="col" onclick="sortTable(4)" class="sortable active">ALERTA</th>
             <th scope="col" style="text-align: center;">MODIFICAR</th>
             <th scope="col" style="text-align: center;">ELIMINAR</th>
           </tr>
@@ -50,15 +49,13 @@
           <div class="modal-body">
             <input type="text" id="ingname" class="form-control" placeholder="Nombre" required="required">
             <br />
-            <select id="category-select" class="form-select">
+            <select id="ingcategory" class="form-select" required="required">
               <option value="">Categoría</option>
             </select>
             <br />
             <input type="number" id="ingquantity" class="form-control" placeholder="Numero de unidades" required="required">
             <br />
-            <input type="number" id="inggrams" class="form-control" placeholder="Gramos por unidad" required="required">
-            <br />
-            <select id="measure-select" class="form-select">
+            <select id="ingmeasure" class="form-select" required="required">
               <option value="">Medida</option>
             </select>
             <br />
@@ -84,12 +81,12 @@
           <div class="modal-body">
             <div class="form-group">
               <label for="ingnameedit">Nombre:</label>
-              <input type="text" id="ingnameedit" class="form-control" placeholder="Nombre" required="required">
+              <input type="text" id="ingnameedit" class="form-control" placeholder="Nombre" required="required" readonly>
             </div>
             <br/>
             <div class="form-group">
-              <label for="category-select-edit">Categoría:</label>
-              <select id="category-select-edit" class="form-select">
+              <label for="ingcategoryedit">Categoría:</label>
+              <select id="ingcategoryedit" class="form-select" required="required">
                 <option value="">Categoría</option>
               </select>
             </div>
@@ -100,13 +97,10 @@
             </div>
             <br/>
             <div class="form-group">
-              <label for="inggramsedit">Gramos por unidad:</label>
-              <input type="number" id="inggramsedit" class="form-control" placeholder="Gramos por unidad" required="required">
-            </div>
-            <br/>
-            <div class="form-group">
-              <label for="ingmeasureedit">Tipo de unidad(cesta, kilos, litros, unidad..):</label>
-              <input type="text" id="ingmeasureedit" class="form-control" placeholder="Tipo de unidad" required="required">
+              <label for="ingmeasureedit">Tipo de unidad:</label>
+              <select id="ingmeasureedit" class="form-select" required="required">
+                <option value="">Tipo de unidad</option>
+              </select>
             </div>
             <br/>
             <div class="form-group">

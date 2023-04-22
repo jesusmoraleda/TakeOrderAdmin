@@ -1,4 +1,4 @@
-import { getPlates, onGetPlates, onGetPlatesByCategory, deletePlate, getPlate, updatePlate, onGetIngredients, onGetPlatesCategories, savePlate } from "./firebase.js"
+import {onGetPlatesByCategory} from "./firebase.js"
 
 const entrantes_table = document.getElementById('entrantes_table');
 const primeros_table = document.getElementById('primeros_table');
