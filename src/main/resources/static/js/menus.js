@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     
             primeros_table.innerHTML += `
             <tr>
-                <td>${plate.name}</td>
+                <td><h5>${plate.name}</h5></td>
                 <td class="btn-cell"><button class="btn btn-default"><i class="fa-solid fa-plus btnadd" data-id="${plate.name}"></i></button></td>
                 <td width="10%" class="btn-cell"><button class="btn btn-default"><i class="fa-solid fa-minus btntrash" data-id="${plate.name}"></i></button></td>
             </tr>`
@@ -80,7 +80,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     
             segundos_table.innerHTML += `
             <tr>
-                <td>${plate.name}</td>
+                <td><h5>${plate.name}</h5></td>
                 <td class="btn-cell"><button class="btn btn-default"><i class="fa-solid fa-plus btnadd" data-id="${plate.name}"></i></button></td>
                 <td width="10%" class="btn-cell"><button class="btn btn-default"><i class="fa-solid fa-minus btntrash" data-id="${plate.name}"></i></button></td>
             </tr>`
@@ -137,7 +137,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     
             postres_table.innerHTML += `
             <tr>
-                <td>${plate.name}</td>
+                <td><h5>${plate.name}</h5></td>
                 <td class="btn-cell"><button class="btn btn-default"><i class="fa-solid fa-plus btnadd" data-id="${plate.name}"></i></button></td>
                 <td width="10%" class="btn-cell"><button class="btn btn-default"><i class="fa-solid fa-minus btntrash" data-id="${plate.name}"></i></button></td>
             </tr>`

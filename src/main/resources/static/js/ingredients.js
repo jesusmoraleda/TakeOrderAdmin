@@ -31,11 +31,11 @@ window.addEventListener('DOMContentLoaded', () => {
           ingredients.push(ingredient.name);
           listaIngredientes.innerHTML += `
           <tr>
-            <td>${ingredient.name}</td>
-            <td>${ingredient.category}</td>
-            <td>${ingredient.quantity}</td>
-            <td>${ingredient.measure}</td>
-            <td>${ingredient.alert}</td>
+            <td><h5>${ingredient.name}</h5></td>
+            <td><h5>${ingredient.category}</h5></td>
+            <td><h5>${ingredient.quantity}</h5></td>
+            <td><h5>${ingredient.measure}</h5></td>
+            <td><h5>${ingredient.alert}</h5></td>
             <td align="center"><button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="fa-solid fa-pencil btneditar" data-id="${doc.id}"></i></button></td>
             <td align="center"><button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#eliminarModal"><i class="fa-solid fa-trash btntrash" data-id="${doc.id}"></i></button></td>
           </tr>`

@@ -4,37 +4,55 @@
 <head th:replace="fragments/_header :: head(pageTitle='TakeOrderAdmin')">
 </head>
 
-<body>
+<body class="bg-image">
     <header th:replace="fragments/_nav.html :: nav"></header>
 
+    <br>
+    <br>
+    <br>
+    <br>
+
     <div class="container text-center">
-        <h1 class="mt-5">Bienvenid@ a TakeOrderAdmin</h1>
+        <h1 class="mt-5" style="color:cornflowerblue;">Bienvenid@ a TakeOrderAdmin</h1>
     </div>
-
-    <br />
-
-    <div class="container">
-      <button class="btn btn-success" id="btn-restock">  Reponer Stock</button>
-    </div>
-
+    
     <br />
 
     <!--Esto son datos de test, los datos se rellenan en index.js-->
-    <div class="container">
-        <table class="table alertTable">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">NOMBRE</th>
-              <th scope="col">UNIDADES</th>
-              <th scope="col">MEDIDA</th>
-              <th scope="col">ALERTA</th>
-            </tr>
-          </thead>
-          <tbody id="listaAlertas">
-            <tr>
-            </tr>
-          </tbody>
-        </table>
+    <div class="container" style="display: flex;">
+        <div class="table-container" style="margin-bottom: 20px;">
+            <button class="btn btn-primary" id="btn-restock-ingredientes">Reponer Stock Ingredientes</button>
+            <table class="table alertTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" style="color: cornflowerblue;">NOMBRE</th>
+                        <th scope="col" style="color: cornflowerblue;">UNIDADES</th>
+                        <th scope="col" style="color: cornflowerblue;">ALERTA</th>
+                    </tr>
+                </thead>
+                <tbody id="listaAlertasIngredientes">
+                    <tr>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-container" style="margin-bottom: 20px;">
+            <button class="btn btn-primary" id="btn-restock-bebidas">Reponer Stock Bebidas</button>
+            <table class="table alertTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" style="color: cornflowerblue;">NOMBRE</th>
+                        <th scope="col" style="color: cornflowerblue;">UNIDADES</th>
+                        <th scope="col" style="color: cornflowerblue;">ALERTA</th>
+                    </tr>
+                </thead>
+                <tbody id="listaAlertasBebidas">
+                    <tr>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script th:src="@{/js/index.js}" type="module"></script>

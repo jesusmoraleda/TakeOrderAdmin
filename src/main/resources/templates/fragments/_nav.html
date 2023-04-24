@@ -9,11 +9,11 @@
 
     <!-- barra de navegación bootstrap 5 -->
     <header th:fragment="nav">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light nav-image" style="position: fixed; top: 0; width: 100%;">
             <div class="container-fluid">
                 <!-- nombre del sitio; es un enlace que lleva a la página ppal -->
                 <a class="navbar-brand" th:href="@{/}" href="/">
-                    <img th:src="@{/img/logo1.png}" src="/img/logo1.png" alt="logo TO" width="130" height="100"
+                    <img th:src="@{/img/logo.png}" src="/img/logo.png" alt="logo TO" width="200" height="100"
                         class="d-inline-block align-text-top">
                 </a>
                 <!-- menu hamburguesa si no cabe todo -->
@@ -25,19 +25,19 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-5">
                         <li class="nav-item mx-3">
-                            <a class="nav-link" th:href="@{/ingredients/}">Ingredientes</a>
+                            <a class="nav-link" style="color:darkblue;" th:href="@{/ingredients/}">Ingredientes</a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a class="nav-link" th:href="@{/drinks/}">Bebidas</a>
+                            <a class="nav-link" style="color: darkblue;" th:href="@{/drinks/}">Bebidas</a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a class="nav-link" th:href="@{/plates/}">Platos</a>
+                            <a class="nav-link" style="color: darkblue;" th:href="@{/plates/}">Platos</a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a class="nav-link" th:href="@{/menus/}">Menús</a>
+                            <a class="nav-link" style="color: darkblue;" th:href="@{/menus/}">Menús</a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a class="nav-link" th:href="@{/test/}">TEST</a>
+                            <a class="nav-link" style="color: darkblue;" th:href="@{/test/}">TEST</a>
                         </li>
                     </ul>
                 </div>

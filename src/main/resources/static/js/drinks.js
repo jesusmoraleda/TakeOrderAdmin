@@ -21,9 +21,9 @@ window.addEventListener('DOMContentLoaded', () => {
           drinks.push(drink.name);
           listaBebidas.innerHTML += `
           <tr>
-            <td>${drink.name}</td>
-            <td>${drink.amount}</td>
-            <td>${drink.alert}</td>
+            <td><h5>${drink.name}</h5></td>
+            <td><h5>${drink.amount}</h5></td>
+            <td><h5>${drink.alert}</h5></td>
             <td align="center"><button class="btn btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="fa-solid fa-pencil btneditar" data-id="${doc.id}"></i></button></td>
             <td align="center"><button class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#eliminarModal"><i class="fa-solid fa-trash btntrash" data-id="${doc.id}"></i></button></td>
           </tr>`

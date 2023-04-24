@@ -36,6 +36,17 @@
 .form-group input {
     flex: 1;
 }
+.nav-item {
+    font-size: 20px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
 /*MODAL*/
 
 #modal::backdrop{
@@ -66,6 +77,7 @@ table .btnadd {
     width: 100px;
     height: 100px;
     text-align: left;
+    margin-right: 50px;
 }
 
 .alertTable td {
@@ -136,6 +148,11 @@ table .btnadd {
     text-align: right;
     width: "10%";
 }
+.btn-default {
+    background-color: black;
+    font-size: 14px;
+    padding: 7px;
+}
 
 .custom-title {
     margin-left: 120px;
@@ -184,4 +201,16 @@ hr{
 .menu-category {
     color: yellow;
 }
+.bg-image {
+    background: url(/img/fondo.jpg) center;
+    background-size: cover;
 
+}
+.nav-image {
+    background: url(/img/nav.png) center;
+    background-size: cover;
+
+}
+html, body {
+    height: 100%;
+}
