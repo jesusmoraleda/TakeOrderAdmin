@@ -56,6 +56,20 @@ export const onGetIngredientsCategories = (callback) =>
 export const onGetIngredientsMeasures = (callback) => 
 onSnapshot(query(collection(db, "ingredient_measures"), orderBy("name")), callback);
 
+//Drinks
+export const saveDrink = (name,amount,alert) =>
+  addDoc(collection(db, "all_drinks"), { name,amount,alert});
+
+export const onGetDrinks = (callback) => 
+onSnapshot(query(collection(db, "all_drinks"), orderBy("name")), callback);
+
+export const deleteDrink = (id) => 
+  deleteDoc(doc(db, "all_drinks", id));
+
+export const getDrink = id => getDoc(doc(db, "all_drinks", id));
+
+export const updateDrink = (id, newFields) =>
+  updateDoc(doc(db, "all_drinks", id), newFields);
 
 //Plates
 export const savePlate = (name, available, category, amount, ingredients) => {

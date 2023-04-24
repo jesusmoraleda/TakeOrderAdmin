@@ -303,10 +303,6 @@ function añadirBuscador(){
       // Itera sobre cada fila de la tabla
       for (var i = 0; i < filas.length; i++) {
         var nombre = filas[i].getElementsByTagName("td")[0];
-        var categoria = filas[i].getElementsByTagName("td")[1];
-        var unidades = filas[i].getElementsByTagName("td")[2];
-        var medida = filas[i].getElementsByTagName("td")[3];
-        var alerta = filas[i].getElementsByTagName("td")[4];
     
         // Comprueba si alguna fila contiene la búsqueda
         if (busqueda.length === 0 || nombre.innerHTML.toLowerCase().indexOf(busqueda) > -1) {

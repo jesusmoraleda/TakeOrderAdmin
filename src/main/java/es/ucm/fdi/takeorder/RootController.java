@@ -17,6 +17,11 @@ public class RootController {
         return "pages/ingredients";
     }
 
+    @GetMapping("/drinks")
+    public String drinks(Model model) {
+        return "pages/drinks";
+    }
+
     @GetMapping("/plates")
     public String plates(Model model) {
         return "pages/plates";
