@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html class="h-100" xmlns:th="http://www.thymeleaf.org">
 
-<head >
-  <head th:replace="fragments/_header :: head(pageTitle='Menu')">
+<head>
+  <head th:replace="fragments/_header :: head(pageTitle='Menus')">
 </head>
 
 <body class="d-flex flex-column h-100 bg-image">
-  <header class ="header" th:replace="fragments/_nav.html :: nav" style="position: fixed; top: 0;"></header>
+  <header th:replace="fragments/_nav.html :: nav"></header>
 
   <br>
   <br>
@@ -14,97 +14,66 @@
   <br>
   <br>
   <br>
+
+  <div class="container-menu">
+    <div class="form-group">
+      <label for="filter-categories">Filtrar por categoría:</label>
+      <select class="form-select" id="filter-categories">
+        <option value="">Todas las categorías</option>
+        <!-- Agrega más opciones de categorías aquí -->
+      </select>
+    </div>
+    <div>
+      <input type="text" id="buscarInput" placeholder="Buscar plato">
+      <button class="btn btn-info">Buscar</button>
+    </div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirPlato" id="btn-save-menu"> Guardar menu</button>
+  </div>
+
+  <br />
 
   <div class="contenedor">
     <div class="columna">
-      <h5 class="custom-title">Primeros platos</h5>
-      <div class="custom-table-container">
-        <table class="table" id="primeros_table">
+      <div class="container">
+        <table class="table" id="plates-table">
           <thead class="thead-dark"> 
-          </thead>
-          <tbody id="menus_primeros">
             <tr>
-                <td>No hay primeros disponibles</td>
-                <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
-                <td width="10%" class="btn-cell"><button><i class="fa-solid fa-minus btntrash"></i></button></td>
+              <th scope="col" onclick="sortTable(0)" class="sortable active">Nombre del plato</th>
+              <th scope="col" onclick="sortTable(1)" class="sortable active">Categoria</th>
+              <th scope="col">Ingredientes</th>
+              <th scope="col">Añadir</th>
+              <th scope="col">Cantidad</th>
             </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <br />
-
-      <h5 class="custom-title">Segundos platos</h5>
-      <div class="custom-table-container">
-        <table class="table" id="segundos_table">
-          <thead class="thead-dark">
           </thead>
-          <tbody id="menus_segundos">
-            <tr>
-                <td>No hay segundos platos disponibles</td>
-                <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
-                <td width="10%" class="btn-cell"><button><i class="fa-solid fa-minus btntrash"></i></button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <br />
-
-      <h5 class="custom-title">Postres</h5>
-      <div class="custom-table-container">
-        <table class="table" id="postres_table">
-          <thead class="thead-dark">
-          </thead>
-          <tbody id="menus_postres">
-            <tr>
-                <td>No hay postres disponibles</td>
-                <td class="btn-cell"><button><i class="fa-solid fa-plus btnadd"></i></button></td>
-                <td width="10%" class="btn-cell"><button><i class="fa-solid fa-minus btntrash"></i></button></td>
-            </tr>
+          <tbody id="listaPlatos">
           </tbody>
         </table>
       </div>
     </div>
-
     <div class="columna">
-      <!--Menu-->
-      <section class="wrap menu">
-        
-        <div class="columns">
-          <h2 class="menu-title">Menú del dia</h2>
-          <div class="menu-restaurante" style="background: url(/img/fondo-menu-restaurante.jpg) center;background-size: cover;">
-            <!--<h3>Menú del dia</h3>
-            <hr>-->
-            <h4 class="menu-category" id="menu_primeros">Primeros Platos</h4>
-            <div id="menu_primeros_container"></div>
-            <br>
-            <h4 class="menu-category" id="menu_segundos">Segundos Platos</h4>
-            <div id="menu_segundos_container"></div>
-            <br>
-            <h4 class="menu-category" id="menu_postres">Postres</h4>
-            <div id="menu_postres_container"></div>
-            <br>
-            <p class="precio-menu">
-              Precio:
-              <span>17€</span>
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <div class="columna">
-      <button>Esto es un button</button>
+      <h2>Platos seleccionados:</h2>
+      <div class="container">
+        <table class="table" id="plates-selected">
+          <thead class="thead-dark"> 
+            <tr>
+              <th scope="col" onclick="sortTable(0)" class="sortable active">Nombre del plato</th>
+              <th scope="col" onclick="sortTable(1)" class="sortable active">Categoria</th>
+              <th scope="col">Cantidad</th>
+            </tr>
+          </thead>
+          <tbody id="listaPlatosSelected">
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-
   
+
 
   <script>
     function sortTable(n) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.getElementById("menu-table");
+      table = document.getElementById("plates-table");
       switching = true;
       // Set the sorting direction to ascending:
       dir = "asc";

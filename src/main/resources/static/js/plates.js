@@ -77,11 +77,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             </div>
           </td>
           <td>
-            <div class="plato">
-              <h7>${plate.amount}</h7>
-            </div>
-          </td>
-          <td>
             <button class="btn btn-info mostrar-ingredientes">${"Ingredientes"}</button>
             <div class="ingredientes oculto">
               <ul>
@@ -124,7 +119,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                 rellenarDesplegables();
 
                 document.getElementById('platenameedit').value = plate.name;
-                document.getElementById('plateavailableedit').checked = plate.available;
                 document.getElementById('platecategoryedit').value = plate.category;
                 //mostrar los ingredientes de ese plato
                 for(let i = 0; i < plate.ingredients.length; i++){
@@ -206,10 +200,9 @@ btnCancelNewPlate.addEventListener("click", async () => {
 //Boton guardar nuevo plato
 btnSaveNewPlate.addEventListener("click", async () => {
   const name = document.getElementById('platename').value;
-  const available = Boolean(document.getElementById('plateavailable').value);
+  //const available = Boolean(document.getElementById('plateavailable').value);
   const category = document.getElementById('platecategory').value;
   console.log(category);
-  const amount = 200;
 
   //Seleccionar todos los ingredientes del plato
   const ingredientSelects = ingredientList.querySelectorAll('select');
@@ -238,17 +231,8 @@ btnSaveNewPlate.addEventListener("click", async () => {
     return;
   }
 
-  /*if (nombreExistente(name)) {
-      Swal.fire(
-          'AÑADIR PLATO',
-          '¡No puede haber dos platos con el mismo nombre!',
-          'error'
-      );
-      return;
-  }*/
-
   try {
-    await savePlate(name, available, category, amount, ingredients);
+    await savePlate(name, category, ingredients, false, 0);
     Swal.fire(
       'AÑADIR PLATO',
       'Plato añadido con éxito!',
@@ -273,9 +257,8 @@ btnCancelEditPlate.addEventListener("click", async () => {
 //Boton guardar edit plato
 btnSaveEditPlate.addEventListener("click", async () => {
   const name = document.getElementById('platenameedit').value;
-  const available = Boolean(document.getElementById('plateavailableedit').value);
+  //const available = Boolean(document.getElementById('plateavailableedit').value);
   const category = document.getElementById('platecategoryedit').value;
-  const amount = 200;
 
   //Seleccionar todos los ingredientes del plato
   const ingredientSelects = ingredientListEdit.querySelectorAll('select');
@@ -303,33 +286,23 @@ btnSaveEditPlate.addEventListener("click", async () => {
     );
     return;
   }
-    /*if (nombreExistente(name)) {
-      Swal.fire(
-          'AÑADIR PLATO',
-          '¡No puede haber dos platos con el mismo nombre!',
-          'error'
-      );
-      return;
-    }*/
   
   try {
     await updatePlate(id, {
       name: name,
-      available: available,
       category: category,
-      amount: amount,
       ingredients: ingredients,
     });
     id = "";
     Swal.fire(
-      'AÑADIR PLATO',
+      'EDITAR PLATO',
       'Plato editado con éxito!',
       'success'
     );
     resetPlateModal();
   } catch (error) {
     Swal.fire(
-      'AÑADIR PLATO',
+      'EDITAR PLATO',
       'Error al editar plato',
       'error'
     );
@@ -337,13 +310,13 @@ btnSaveEditPlate.addEventListener("click", async () => {
 });
 
 
-checkbox.addEventListener('change', function() {
+/*checkbox.addEventListener('change', function() {
   if (checkbox.checked) {
     checkbox.value = 'true';
   } else {
     checkbox.value = 'false';
   }
-});
+});*/
 
 function añadirIngredientes(optionIndex = undefined, cantidad = null, editarPlato = false) {
   // Obtener la lista de opciones disponibles

@@ -72,12 +72,12 @@ export const updateDrink = (id, newFields) =>
   updateDoc(doc(db, "all_drinks", id), newFields);
 
 //Plates
-export const savePlate = (name, available, category, amount, ingredients) => {
+export const savePlate = (name, category, ingredients, in_menu, quantity_menu) => {
   const ingredientsData = ingredients.map(ingredient => ({
     name: ingredient.name,
     quantity: ingredient.quantity,
   }));
-  addDoc(collection(db, "plates"), { name, available, category, amount, ingredients: ingredientsData});
+  addDoc(collection(db, "plates"), { name, category, ingredients: ingredientsData, in_menu, quantity_menu});
 }
 
 export const onGetPlates = (callback) => 

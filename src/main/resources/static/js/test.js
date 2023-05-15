@@ -1,117 +1,190 @@
-import { saveIngredient, getIngredients, onGetIngredients, deleteIngredient, getIngredient, updateIngredient } from "./firebase.js"
+import { onGetPlates, onGetIngredients} from "./firebase.js"
 
-const ingredientForm = document.getElementById('ingredient-form')
-const ingredientsContainer = document.getElementById('ingredients-container')
-//const modal = document.getElementById('modalUsuario')
+const listaPlatos = document.getElementById('listaPlatos');
+const listaPlatosSelected = document.getElementById("listaPlatosSelected");
 
-let editStatus = false;
-let id = '';
+const options = [];
+const plates = [];
 
-//Esto se ejecuta al arrancar la pagina ¿?
+
+//Esto se ejecuta al arrancar la pagina
 window.addEventListener('DOMContentLoaded', async () => {
-    console.log("ingredients.js cargado con exito");
 
-    onGetIngredients((querySnapshot) => {
-        ingredientsContainer.innerHTML = "";
-    
-        querySnapshot.forEach((doc) => {
-          const ingredient = doc.data();
-    
-          ingredientsContainer.innerHTML += `
-            <div class="card card-body mt-2 border-primary">
-                <h3 class="h5">${ingredient.title}</h3>
-                <p>cantidad: ${ingredient.quantity}</p>
-                <p>medida: ${ingredient.measure}</p>
-                <p>alerta: ${ingredient.alert}</p>
-                <div>
-                <button class="btn btn-primary btn-delete" data-id="${doc.id}">
-                    🗑 Delete
-                </button>
-                <button class="btn btn-secondary btn-edit" data-id="${doc.id}">
-                    🖉 Edit
-                </button>
-                </div>
-            </div>`;
-        });
+  onGetIngredients((querySnapshot) => {
+    let i = 1;
+    querySnapshot.forEach((doc) => {
+      const ingredient = doc.data();
+      options.push({ value: i, text: ingredient.name, measure: ingredient.measure});
+      i++;
+    });
+  })
 
-        const btnsDelete = ingredientsContainer.querySelectorAll(".btn-delete");
+  onGetPlates((querySnapshot) => {
+    listaPlatos.innerHTML = "";
+  
+      querySnapshot.forEach((doc) => {
 
-        btnsDelete.forEach((btn) =>
-            btn.addEventListener("click", async ({ target: { dataset } }) => {
-                try {
-                    await deleteIngredient(dataset.id);
-                } catch (error) {
-                    console.log(error);
-                }
-            })
-        );
-
-        const btnsEdit = ingredientsContainer.querySelectorAll(".btn-edit");
-
-        btnsEdit.forEach((btn) => {
-            btn.addEventListener("click", async (e) => {
-                try {
-                    const doc = await getIngredient(e.target.dataset.id);
-                    const ingredient = doc.data();
-                    ingredientForm["ingredient-title"].value = ingredient.title;
-                    ingredientForm["ingredient-quantity"].value = ingredient.quantity;
-                    ingredientForm["ingredient-measure"].value = ingredient.measure;
-                    ingredientForm["ingredient-alert"].value = ingredient.alert;
-
-                    editStatus = true;
-                    id = doc.id;
-                    ingredientForm["btn-ingredient-form"].innerText = "Actualizar";
-                } catch (error) {
-                    console.log(error);
-                }
-            });
-        });
-
-    })
-
-    const btnAbrirModal = document.querySelector("#btn-abrir-modal");
-    const btnCerrarModal = document.querySelector("#btn-cerrar-modal");
-    
-    btnAbrirModal.addEventListener("click", ()=>{
-        modal.showModal();
-    })
-
-    btnCerrarModal.addEventListener("click", ()=>{
-        modal.close();
-    })
-
-})
-
-ingredientForm.addEventListener('submit', async (e) =>{
-    e.preventDefault()
-
-    const title = ingredientForm['ingredient-title']
-    const quantity = ingredientForm['ingredient-quantity']
-    const measure = ingredientForm['ingredient-measure']
-    const alert = ingredientForm['ingredient-alert']
-
-    try {
-        if (!editStatus) {
-          await saveIngredient(title.value, quantity.value, measure.value, alert.value);
-        } else {
-          await updateIngredient(id, {
-            title: title.value,
-            quantity: quantity.value,
-            measure: measure.value,
-            alert: alert.value,
-          });
-    
-          editStatus = false;
-          id = "";
-          ingredientForm["btn-ingredient-form"].innerText = "Guardar";
+        const plate = doc.data();
+        plates.push(plate.name);
+        
+        let ingredientesHtml = "";
+        for (let i = 0; i < plate.ingredients.length; i++) {
+          const ingrediente = plate.ingredients[i].name;
+          const cantidad = plate.ingredients[i].quantity;
+          const option = options.find(option => option.text === ingrediente);
+          const measure = option ? option.measure : "";
+          ingredientesHtml += `<li>${ingrediente} - ${cantidad} ${measure}</li>`;
         }
-    
-        ingredientForm.reset();
-        title.focus();
-    } catch (error) {
-        console.log(error);
-    }
 
-    ingredientForm.reset();
-    modal.close();
+        listaPlatos.innerHTML += `
+        <tr>
+          <td>
+            <div class="plato">
+              <h5>${plate.name}</h5>
+            </div>
+          </td>
+          <td>
+            <div class="plato">
+              <h7>${plate.category}</h7>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-info mostrar-ingredientes">${"Ingredientes"}</button>
+            <div class="ingredientes oculto">
+              <ul>
+              ${ingredientesHtml}
+              </ul>
+            </div>
+            <td>
+            <label class="btn btn-addtomenu custom-checkbox">
+                <input type="checkbox" class="checkbox-addtomenu" data-id="${doc.id}">
+                <span class="checkbox-icon"></span>
+            </label>
+            </td>
+            <td><input type="number" min="1" value="0" name="cantidad" data-id="${doc.id}"></td>
+          </td>
+        </tr>`
+      });
+
+      // Ordenar la tabla por nombre por defecto
+      sortTable(0);
+
+      //Botones mostrar ingredientes
+      const botonesIngredientes = document.querySelectorAll(".mostrar-ingredientes");
+
+      botonesIngredientes.forEach((boton) => {
+        boton.addEventListener("click", () => {
+          const ingredientes = boton.nextElementSibling;
+          if (ingredientes.classList.contains("oculto")) {
+            ingredientes.classList.remove("oculto");
+          } else {
+            ingredientes.classList.add("oculto");
+          }
+        });
+      });
+
+      // Obtener todos los checkboxes
+      const checkboxesAddToMenu = document.querySelectorAll('.checkbox-addtomenu');
+
+      // Añadir un manejador de eventos a cada checkbox
+      checkboxesAddToMenu.forEach((checkbox) => {
+      checkbox.addEventListener('click', (event) => {
+          const checkboxIcon = event.target.nextElementSibling;
+          checkboxIcon.classList.toggle('checked');
+
+          if (checkbox.checked) {
+            console.log(checkbox.checked);
+            // Obtener el nombre del plato y la cantidad desde la fila correspondiente en la tabla de la izquierda
+            const parentRow = checkbox.closest('tr');
+            const plateName = parentRow.querySelector('.plato h5').textContent;
+            const plateCategory = parentRow.querySelector('.plato h7').textContent;
+            const plateQty = parentRow.querySelector('input[name="cantidad"]').value;
+            console.log(plateName);
+            
+            // Agregar una nueva fila a la tabla de la derecha con los datos del plato
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+              <td><h5>${plateName}</h5></td>
+              <td>${plateCategory}</td>
+              <td>${plateQty}</td>
+            `;
+            console.log(newRow);
+            listaPlatosSelected.appendChild(newRow);
+          } else {
+            // El checkbox se ha desmarcado, eliminar el plato de la tabla de la derecha
+            const parentRow = checkbox.closest('tr');
+            const plateName = parentRow.querySelector('.plato h5').textContent;
+            console.log(plateName);
+            const plateRow = [...listaPlatosSelected.rows].find(row => row.cells[0].textContent.trim() === plateName).closest('tr');
+            listaPlatosSelected.removeChild(plateRow);
+
+            /*const menuItem = listaPlatosSelected.querySelector(`[data-id="${plateName}"]`);
+            menuItem.remove();*/
+          }
+      });
+      });
+
+  }) 
+
+  añadirBuscador();
+    
+  añadirFiltro();
+
 })
+
+function añadirBuscador(){
+  const buscarInput = document.getElementById('buscarInput');
+
+  buscarInput.addEventListener('input', () => {
+    const busqueda = buscarInput.value.toLowerCase();
+    // Lógica de búsqueda...
+    // Obtiene todas las filas de la tabla
+    var filas = document.getElementById("plates-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+  
+    // Itera sobre cada fila de la tabla
+    for (var i = 0; i < filas.length; i++) {
+      var nombre = filas[i].getElementsByTagName("td")[0];
+      var categoria = filas[i].getElementsByTagName("td")[1];
+  
+      // Comprueba si alguna fila contiene la búsqueda
+      if (busqueda.length === 0 || nombre.innerHTML.toLowerCase().indexOf(busqueda) > -1) {
+        // Si la fila contiene la búsqueda, muestra la fila y resáltala
+        filas[i].style.display = "";
+        if (busqueda.length > 0) {
+          filas[i].classList.add("resaltado");
+        } else {
+          filas[i].classList.remove("resaltado");
+        }
+      } else {
+        // Si la fila no contiene la búsqueda, ocúltala y elimina el resaltado
+        filas[i].style.display = "none";
+        filas[i].classList.remove("resaltado");
+      }
+    }
+  });
+}
+
+function añadirFiltro(){
+  const categoriaSelect = document.getElementById('filter-categories');
+
+  categoriaSelect.addEventListener('change', () => {
+      const categoriaSeleccionada = categoriaSelect.value.toLowerCase();
+    
+      // Obtiene todas las filas de la tabla
+      const filas = document.getElementById("plates-table").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    
+      // Itera sobre cada fila de la tabla
+      for (let i = 0; i < filas.length; i++) {
+        const categoria = filas[i].getElementsByTagName("td")[1].textContent.toLowerCase();
+    
+        // Comprueba si la categoría de la fila coincide con la categoría seleccionada o si se seleccionó "Todas"
+        if (categoria === categoriaSeleccionada || categoriaSeleccionada === '') {
+          // Si la fila coincide con la categoría seleccionada o se seleccionó "Todas", muestra la fila
+          filas[i].style.display = "";
+        } else {
+          // Si la fila no coincide con la categoría seleccionada, ocúltala
+          filas[i].style.display = "none";
+        }
+      }
+  });
+}

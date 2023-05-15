@@ -121,19 +121,8 @@ table .btnadd {
 .contenedor {
     display:flex;
     justify-content: space-between;
-  }
-
-.columna {
-    width: 30%;
-    margin-right: 1%;
-}
-
-.columna:last-child {
-    margin-right: 0;
-}
-
-.small-columna{
-    width: 30%
+    margin-right: 150px;
+    margin-left: 150px;
 }
 
 /*Columna tablas menus*/
@@ -143,6 +132,11 @@ table .btnadd {
     margin-right: auto;
     height: 200px; /* ajusta la altura de la tabla */
     overflow-y: scroll; /* añade una barra lateral si la altura de la tabla supera 200px */
+}
+.container-menu {
+    display: flex;
+    justify-content:center;
+    gap: 200px; /* espacio de 10px entre elementos */
 }
 .btn-cell {
     text-align: right;
@@ -168,7 +162,7 @@ html{
     margin: 0 auto;
 }
 
-.menu-restaurante{
+/*.menu-restaurante{
     color: #fff;  
     text-align: center;
     background-repeat: no-repeat;
@@ -200,7 +194,7 @@ hr{
 
 .menu-category {
     color: yellow;
-}
+}*/
 .bg-image {
     background: url(/img/fondo.jpg) center;
     background-size: cover;
@@ -213,4 +207,24 @@ hr{
 }
 html, body {
     height: 100%;
+}
+
+.btn-addtomenu input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+}
+.custom-checkbox {
+    cursor: pointer;
+}
+.small-input {
+    width: 50px;
+}
+.tables-container {
+    display: flex;
+ }
+  
+.table-container {
+    display: inline-block;
+    width: 50%;
+    margin: 0 5px;
 }
