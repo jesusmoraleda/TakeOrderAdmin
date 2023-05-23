@@ -170,9 +170,7 @@ btnSaveMenu.addEventListener("click", async () => {
         let id = checkbox.dataset.id;
         if (checkbox.checked != initialState[id]) {
             // El valor del checkbox ha cambiado
-            const cantidad = document.querySelector(`[data-id="${id}"][name="cantidad"]`).value;
-            console.log(checkbox.checked);
-            console.log(cantidad);
+            const cantidad = parseInt(document.querySelector(`[data-id="${id}"][name="cantidad"]`).value);
             // Actualizar el valor en la base de datos aquí
             await updatePlate(id, {
                 in_menu: checkbox.checked,

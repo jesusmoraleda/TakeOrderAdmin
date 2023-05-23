@@ -11,10 +11,13 @@ let id = ''; //Para la edicion
 
 const categories = [];
 const measures = [];
-const ingredients = [];
+let ingredients = [];
+
 
 //Esto se ejecuta al arrancar la pagina ¿?
 window.addEventListener('DOMContentLoaded', () => {
+
+    ingredients = [];
 
     onGetIngredientsCategories((querySnapshot) => {
         addIngredientsCategories(querySnapshot);
@@ -28,7 +31,9 @@ window.addEventListener('DOMContentLoaded', () => {
     
         querySnapshot.forEach((doc) => {
           const ingredient = doc.data();
-          ingredients.push(ingredient.name);
+          const name = ingredient.name;
+          const id = doc.id;
+          ingredients.push({name, id});
           listaIngredientes.innerHTML += `
           <tr>
             <td><h5>${ingredient.name}</h5></td>
@@ -42,7 +47,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         
         // Ordenar la tabla por nombre por defecto
-        sortTable(0);
         sortTable(0);
         
 
@@ -94,7 +98,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const doc = await getIngredient(e.target.dataset.id);
                 const ingredient = doc.data();
 
-                rellenarDesplegables();
+                rellenarDesplegablesEdit();
 
                 document.getElementById('ingnameedit').value = ingredient.name;
                 document.getElementById('ingcategoryedit').value = ingredient.category;
@@ -120,6 +124,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 //Añadir nuevo ingrediente
 btnAddNewIngredient.addEventListener("click", ()=>{
+    rellenarDesplegables();
+
     document.getElementById('ingname').value = '';
     document.getElementById('ingquantity').value = '';
     document.getElementById('ingmeasure').selectedIndex = 0;
@@ -179,11 +185,11 @@ btnCancelEdit.addEventListener("click", ()=>{
 
 //Guardar edit de ingrediente
 btnSaveEdit.addEventListener("click", async ()=>{
-    const name = document.getElementById('ingnameedit');
-    const quantity = document.getElementById('ingquantityedit');
-    const measure = document.getElementById('ingmeasureedit');
-    const alert = document.getElementById('ingalertedit');
-    const category = document.getElementById('ingcategoryedit');
+    const name = document.getElementById('ingnameedit').value;
+    const quantity = parseInt(document.getElementById('ingquantityedit').value);
+    const measure = document.getElementById('ingmeasureedit').value;
+    const alert = parseInt(document.getElementById('ingalertedit').value);
+    const category = document.getElementById('ingcategoryedit').value;
 
     if (!name || quantity < 0 || alert < 0) {
         Swal.fire(
@@ -194,13 +200,22 @@ btnSaveEdit.addEventListener("click", async ()=>{
         return;
     }
 
+    if (nombreExistente(name, id)) {
+        Swal.fire(
+            'AÑADIR INGREDIENTE',
+            '¡No puede haber dos ingredientes con el mismo nombre!',
+            'error'
+        );
+        return;
+    }
+
     try{
         await updateIngredient(id, {
-            name: name.value,
-            category: category.value,
-            quantity: quantity.value,
-            measure: measure.value,
-            alert: alert.value,
+            name: name,
+            category: category,
+            quantity: quantity,
+            measure: measure,
+            alert: alert,
         });
         id = "";
         Swal.fire(
@@ -258,13 +273,15 @@ function addIngredientsMeasures(querySnapshot){
     }
 }
 
-function nombreExistente(name){
+function nombreExistente(name, id = ""){
     // Recorrer la lista de ingredientes
     for (let i = 0; i < ingredients.length; i++) {
-        // Comparar el nombre del ingrediente actual con el nombre del nuevo ingrediente
-        if (ingredients[i].toLowerCase() === name.toLowerCase()) {
-            // Si encontramos un ingrediente con el mismo nombre, devolver true
-            return true;
+        if(ingredients[i].id != id){
+            // Comparar el nombre del ingrediente actual con el nombre del nuevo ingrediente
+            if (ingredients[i].name === name) {
+                // Si encontramos un ingrediente con el mismo nombre, devolver true
+                return true;
+            }
         }
     }
 
@@ -272,7 +289,7 @@ function nombreExistente(name){
     return false;
 }
 
-function rellenarDesplegables(){
+function rellenarDesplegablesEdit(){
     const select = document.querySelector('#ingcategoryedit');
     if(select.length <= 1){
         categories.forEach(category => {
@@ -284,11 +301,34 @@ function rellenarDesplegables(){
     
 
     const selectmeasures = document.querySelector('#ingmeasureedit');
-    measures.forEach(measure => {
-        const option = document.createElement('option');
-        option.textContent = measure;
-        selectmeasures.appendChild(option);
-    });
+    if(selectmeasures.length <= 1){
+        measures.forEach(measure => {
+            const option = document.createElement('option');
+            option.textContent = measure;
+            selectmeasures.appendChild(option);
+        });
+    }
+    
+}
+
+function rellenarDesplegables(){
+    const select = document.querySelector('#ingcategory');
+    if(select.length <= 1){
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.textContent = category;
+            select.appendChild(option);
+        });
+    }
+    
+
+    if(selectmeasures.length <= 1){
+        measures.forEach(measure => {
+            const option = document.createElement('option');
+            option.textContent = measure;
+            selectmeasures.appendChild(option);
+        });
+    }
 }
 
 function añadirBuscador(){

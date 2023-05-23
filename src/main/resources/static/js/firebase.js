@@ -76,6 +76,7 @@ export const savePlate = (name, category, ingredients, in_menu, quantity_menu) =
   const ingredientsData = ingredients.map(ingredient => ({
     name: ingredient.name,
     quantity: ingredient.quantity,
+    id: ingredient.id,
   }));
   addDoc(collection(db, "plates"), { name, category, ingredients: ingredientsData, in_menu, quantity_menu});
 }

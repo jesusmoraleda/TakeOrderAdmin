@@ -4,6 +4,7 @@ import { onGetPlates, deletePlate, getPlate, updatePlate, onGetIngredients, onGe
 
 //Boton añadir plato
 const addPlateBtn = document.querySelector("#btn-add-new-plate");
+
 // Botón "Añadir ingrediente"
 const addIngredientBtn = document.querySelector("#add-ingredient");
 const addIngredientBtnEdit = document.querySelector("#add-ingredient-edit");
@@ -38,7 +39,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     let i = 1;
     querySnapshot.forEach((doc) => {
       const ingredient = doc.data();
-      options.push({ value: i, text: ingredient.name, measure: ingredient.measure});
+      options.push({ value: i, text: ingredient.name, measure: ingredient.measure, id: doc.id});
       i++;
     });
   })
@@ -91,6 +92,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
       // Ordenar la tabla por nombre por defecto
       sortTable(0);
+      sortTable(0);
 
       //Botones mostrar ingredientes
       const botonesIngredientes = document.querySelectorAll(".mostrar-ingredientes");
@@ -116,7 +118,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 const doc = await getPlate(e.target.dataset.id);
                 const plate = doc.data();
 
-                rellenarDesplegables();
+                rellenarDesplegablesEdit();
 
                 document.getElementById('platenameedit').value = plate.name;
                 document.getElementById('platecategoryedit').value = plate.category;
@@ -183,11 +185,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     añadirIngredientes();
   });
 
+  addIngredientBtnEdit.addEventListener("click", () => {
+    añadirIngredientes(undefined, undefined,true);
+  });
+
   //Boton añadir nuevo plato
   addPlateBtn.addEventListener("click", () => {
     resetPlateModal();
+    rellenarDesplegables();
     añadirIngredientes();
-    añadirPlatesCategories();
   });
 
 })
@@ -212,12 +218,17 @@ btnSaveNewPlate.addEventListener("click", async () => {
 
   for (let i = 0; i < ingredientSelects.length; i++) {
     const ingredient = ingredientSelects[i].options[ingredientSelects[i].selectedIndex].text;
+
     const quantity = parseFloat(ingredientInputs[i].value);
     //Me quedo solo con el nombre del ingrediente, sin la medida
     const split = ingredient.split(' (');
     const name = split[0];
+
+    const option = options.find(option => option.text === name);
+    const id = option ? option.id : "";
+
     if(name && quantity){
-      ingredients.push({name, quantity});
+      ingredients.push({name, quantity, id});
     }
     
   }
@@ -247,7 +258,6 @@ btnSaveNewPlate.addEventListener("click", async () => {
     );
   }
 });
-
 
 //Boton cancelar editar plato
 btnCancelEditPlate.addEventListener("click", async () => {
@@ -308,7 +318,6 @@ btnSaveEditPlate.addEventListener("click", async () => {
     );
   }
 });
-
 
 /*checkbox.addEventListener('change', function() {
   if (checkbox.checked) {
@@ -438,20 +447,41 @@ function nombreExistente(name){
   return false;
 }
 
-function rellenarDesplegables(){
+function rellenarDesplegablesEdit(){
                   
   const select = document.querySelector('#platecategoryedit');
-  console.log(select.length);
-  categories.forEach(category => {
+  if(select.length <= 1){
+    categories.forEach(category => {
       const option = document.createElement('option');
       option.textContent = category;
       select.appendChild(option);
-  });
+    });
+  }
+  
 
   //Añadir ingredientes del modal editar
-  addIngredientBtnEdit.addEventListener("click", () => {
+  /*addIngredientBtnEdit.addEventListener("click", () => {
     añadirIngredientes(undefined, undefined,true);
-  });
+  });*/
+
+}
+
+function rellenarDesplegables(){
+                  
+  const select = document.querySelector('#platecategory');
+  if(select.length <= 1){
+    categories.forEach(category => {
+      const option = document.createElement('option');
+      option.textContent = category;
+      select.appendChild(option);
+    });
+  }
+  
+
+  //Añadir ingredientes del modal editar
+  /*addIngredientBtn.addEventListener("click", () => {
+    añadirIngredientes(undefined, undefined,false);
+  });*/
 
 }
 
