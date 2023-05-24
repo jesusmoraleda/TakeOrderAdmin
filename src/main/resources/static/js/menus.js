@@ -1,32 +1,35 @@
-import { onGetPlates, onGetIngredients, updatePlate} from "./firebase.js"
+import { onGetPlates, onGetIngredients, updatePlate, updateIngredient} from "./firebase.js"
 
 const listaPlatos = document.getElementById('listaPlatos');
 const listaPlatosSelected = document.getElementById("listaPlatosSelected");
 const btnSaveMenu = document.querySelector("#btn-save-menu");
 
-const options = [];
+const ingredientes = [];
 const initialState = {};
+let plates = [];
 
 
 //Esto se ejecuta al arrancar la pagina
 window.addEventListener('DOMContentLoaded', async () => {
-
+  
   onGetIngredients((querySnapshot) => {
     let i = 1;
     querySnapshot.forEach((doc) => {
       const ingredient = doc.data();
-      options.push({ value: i, text: ingredient.name, measure: ingredient.measure});
+      ingredientes.push({ value: i, text: ingredient.name, measure: ingredient.measure, quantity: ingredient.quantity, id: doc.id});
       i++;
     });
   })
 
   onGetPlates((querySnapshot) => {
+    plates = [];
     listaPlatos.innerHTML = "";
     listaPlatosSelected.innerHTML = "";
   
       querySnapshot.forEach((doc) => {
 
         const plate = doc.data();
+        //console.log(plate);
 
         //En el menu solo van primeros segundos y postres
         if (plate.category == "Primer plato" || plate.category == "Segundo plato" || plate.category == "Postre") {
@@ -36,12 +39,14 @@ window.addEventListener('DOMContentLoaded', async () => {
             
             let ingredientesHtml = "";
             for (let i = 0; i < plate.ingredients.length; i++) {
-            const ingrediente = plate.ingredients[i].name;
-            const cantidad = plate.ingredients[i].quantity;
-            const option = options.find(option => option.text === ingrediente);
-            const measure = option ? option.measure : "";
-            ingredientesHtml += `<li>${ingrediente} - ${cantidad} ${measure}</li>`;
+              const ingrediente = plate.ingredients[i].name;
+              const cantidad = plate.ingredients[i].quantity;
+              const option = ingredientes.find(option => option.text === ingrediente);
+              const measure = option ? option.measure : "";
+              ingredientesHtml += `<li>${ingrediente} - ${cantidad} ${measure}</li>`;
             }
+            //console.log(plates);
+            plates.push({name: plate.name, inmenu: plate.in_menu, cantidad: plate.quantity_menu, ingredientes: plate.ingredients});
 
             listaPlatos.innerHTML += `
             <tr>
@@ -73,7 +78,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             </tr>`
 
             if(isChecked){
-                listaPlatosSelected.innerHTML += `
+              listaPlatosSelected.innerHTML += `
             <tr>
             <td>
                 <div class="plato">
@@ -121,15 +126,20 @@ window.addEventListener('DOMContentLoaded', async () => {
           const checkboxIcon = event.target.nextElementSibling;
           checkboxIcon.classList.toggle('checked');
 
+          // Obtener el nombre del plato y la cantidad desde la fila correspondiente en la tabla de la izquierda
+          const parentRow = checkbox.closest('tr');
+          const plateName = parentRow.querySelector('.plato h5').textContent;
+          const plateCategory = parentRow.querySelector('.plato h7').textContent;
+          const plateQty = parentRow.querySelector('input[name="cantidad"]').value;
+
+          // Encontrar el plato en el arreglo plates por su ID
+          const plato = plates.find((plate) => plate.name === plateName);
+
+          // Actualizar el valor inmenu del plato
+          plato.inmenu = checkbox.checked;
+          plato.cantidad = plateQty;
+
           if (checkbox.checked) {
-            console.log(checkbox.checked);
-            // Obtener el nombre del plato y la cantidad desde la fila correspondiente en la tabla de la izquierda
-            const parentRow = checkbox.closest('tr');
-            const plateName = parentRow.querySelector('.plato h5').textContent;
-            const plateCategory = parentRow.querySelector('.plato h7').textContent;
-            const plateQty = parentRow.querySelector('input[name="cantidad"]').value;
-            console.log(plateName);
-            
             // Agregar una nueva fila a la tabla de la derecha con los datos del plato
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
@@ -137,13 +147,11 @@ window.addEventListener('DOMContentLoaded', async () => {
               <td>${plateCategory}</td>
               <td>${plateQty}</td>
             `;
-            console.log(newRow);
             listaPlatosSelected.appendChild(newRow);
           } else {
             // El checkbox se ha desmarcado, eliminar el plato de la tabla de la derecha
             const parentRow = checkbox.closest('tr');
             const plateName = parentRow.querySelector('.plato h5').textContent;
-            console.log(plateName);
             const plateRow = [...listaPlatosSelected.rows].find(row => row.cells[0].textContent.trim() === plateName).closest('tr');
             listaPlatosSelected.removeChild(plateRow);
 
@@ -162,49 +170,120 @@ window.addEventListener('DOMContentLoaded', async () => {
 })
 
 btnSaveMenu.addEventListener("click", async () => {
-    console.log("guardar menu");
-    comprobarDisponibilidadIngredientes();
+  if(await comprobarDisponibilidadIngredientes() == true){
+    console.log("vamos a guardar platos");
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
     checkboxes.forEach(async (checkbox) => {
         let id = checkbox.dataset.id;
+        console.log(checkbox.checked);
         if (checkbox.checked != initialState[id]) {
-            // El valor del checkbox ha cambiado
-            const cantidad = parseInt(document.querySelector(`[data-id="${id}"][name="cantidad"]`).value);
+            // El valor del checkbox ha cambiado. Si se ha quitado pongo cantidad a 0
+            let cantidad = 0;
+            if(checkbox.checked){ cantidad = parseInt(document.querySelector(`[data-id="${id}"][name="cantidad"]`).value);}
             // Actualizar el valor en la base de datos aquí
-            await updatePlate(id, {
+            try{
+              //Actualizar platos (checkboxes y cantidad)
+              await updatePlate(id, {
                 in_menu: checkbox.checked,
                 quantity_menu: cantidad,
-            });
-            Swal.fire(
-            'GUARDAR MENU',
-            'Menu guardado con éxito!',
-            'success'
-            );
+              });
+              console.log("updated plato");
+            } catch(error){
+              Swal.fire(
+                'GUARDAR MENU',
+                'Error al actualizar los platos del menú',
+                'error'
+              )
+            } 
         }
     });
+    Swal.fire(
+      'GUARDAR MENU',
+      'Menu guardado con éxito!',
+      'success'
+    );
+  } 
 });
 
-function comprobarDisponibilidadIngredientes(){
-    let ingredientesNecesarios = {};
-  
-    /*for (let i = 0; i < listaPlatos.length; i++) {
-        if (listaPlatos[i].checkbox) {
-        let cantidad = listaPlatos[i].cantidad;
-        let ingredientes = listaPlatos[i].ingredientes;
-        
-        for (let j = 0; j < ingredientes.length; j++) {
-            let ingrediente = ingredientes[j].nombre;
-            let cantidadNecesaria = cantidad * ingredientes[j].cantidad;
-            
-            if (ingrediente in ingredientesNecesarios) {
-            ingredientesNecesarios[ingrediente] += cantidadNecesaria;
-            } else {
-            ingredientesNecesarios[ingrediente] = cantidadNecesaria;
-            }
+async function comprobarDisponibilidadIngredientes() {
+  const ingredientesNecesarios = {};
+  const ingredientesInsuficientes = [];
+
+  // Recorrer el arreglo de platos
+  plates.forEach((plato) => {
+    if (plato.inmenu) {
+      // El plato está en el menú
+      const ingredientesPlato = plato.ingredientes;
+      const raciones = plato.cantidad;
+
+      // Recorrer los ingredientes del plato
+      ingredientesPlato.forEach((ingrediente) => {
+        const nombreIngrediente = ingrediente.name;
+        const cantidadIngrediente = ingrediente.quantity * raciones;
+
+        // Verificar si el ingrediente ya está en la lista de ingredientes necesarios
+        if (ingredientesNecesarios.hasOwnProperty(nombreIngrediente)) {
+          // El ingrediente ya existe, sumar la cantidad requerida
+          ingredientesNecesarios[nombreIngrediente] += cantidadIngrediente;
+        } else {
+          // El ingrediente no existe, agregarlo a la lista
+          ingredientesNecesarios[nombreIngrediente] = cantidadIngrediente;
         }
-        }
-    }*/
+      });
+    }
+  });
+
+  // Verificar disponibilidad de ingredientes
+  for (const ingrediente in ingredientesNecesarios) {
+    const cantidadNecesaria = ingredientesNecesarios[ingrediente];
+
+    // Buscar el ingrediente en el arreglo de ingredientes disponibles
+    const ingredienteDisponible = ingredientes.find((item) => item.text == ingrediente);
+
+    if (!ingredienteDisponible || ingredienteDisponible.quantity < cantidadNecesaria) {
+      // No hay suficiente cantidad del ingrediente disponible
+      ingredientesInsuficientes.push(ingrediente);
+    }
+  }
+
+  if (ingredientesInsuficientes.length > 0) {
+    const mensaje = `Error al guardar el menú, no hay suficiente cantidad de los siguientes ingredientes: <br>${ingredientesInsuficientes.join(', ')}`;
+    Swal.fire({
+      title: 'GUARDAR MENU',
+      html: mensaje,
+      icon: 'error'
+    });
+    return false;
+  }
+  else{
+    // Actualizar la cantidad de ingredientes en la base de datos
+    for (const ingrediente in ingredientesNecesarios) {
+      const cantidadNecesaria = ingredientesNecesarios[ingrediente];
+
+      // Buscar el ingrediente en el arreglo de ingredientes disponibles
+      const ingredienteDisponible = ingredientes.find((item) => item.text == ingrediente);
+
+      if (ingredienteDisponible) {
+        const nuevaCantidad = ingredienteDisponible.quantity - cantidadNecesaria;
+        console.log(nuevaCantidad);
+        try{
+          //Actualizar platos (checkboxes y cantidad)
+          await updateIngredient(ingredienteDisponible.id, {
+            quantity: nuevaCantidad.toFixed(2),
+          });
+        } catch(error){
+          Swal.fire(
+            'GUARDAR MENU',
+            'Error al reducir la cantidad',
+            'error'
+          )
+        } 
+      }
+    }
+    
+    return true;
+  }
 }
 
 function añadirBuscador(){
@@ -251,9 +330,10 @@ function añadirFiltro(){
       // Itera sobre cada fila de la tabla
       for (let i = 0; i < filas.length; i++) {
         const categoria = filas[i].getElementsByTagName("td")[1].textContent.toLowerCase();
-    
+        console.log(categoria);
+        console.log(categoriaSeleccionada);
         // Comprueba si la categoría de la fila coincide con la categoría seleccionada o si se seleccionó "Todas"
-        if (categoria === categoriaSeleccionada || categoriaSeleccionada === '') {
+        if (categoria.trim() === categoriaSeleccionada || categoriaSeleccionada === '') {
           // Si la fila coincide con la categoría seleccionada o se seleccionó "Todas", muestra la fila
           filas[i].style.display = "";
         } else {

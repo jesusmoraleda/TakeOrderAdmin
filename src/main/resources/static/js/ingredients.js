@@ -141,6 +141,8 @@ btnSaveNewIngredient.addEventListener("click", ()=>{
     const alert = parseInt(document.getElementById('ingalert').value);
     const category = document.getElementById('ingcategory').value;
 
+    resetIngredientModal();
+
     if (!name || quantity < 0 || alert < 0) {
         Swal.fire(
             'AÑADIR INGREDIENTE',
@@ -321,7 +323,7 @@ function rellenarDesplegables(){
         });
     }
     
-
+    const selectmeasures = document.querySelector('#ingmeasure');
     if(selectmeasures.length <= 1){
         measures.forEach(measure => {
             const option = document.createElement('option');
@@ -329,6 +331,14 @@ function rellenarDesplegables(){
             selectmeasures.appendChild(option);
         });
     }
+}
+
+function resetIngredientModal(){
+    document.getElementById('ingname').value = '';
+    document.getElementById('ingquantity').value = '';
+    document.getElementById('ingmeasure').selectedIndex = 0;
+    document.getElementById('ingalert').value = '';
+    document.getElementById('ingcategory').selectedIndex = 0;
 }
 
 function añadirBuscador(){

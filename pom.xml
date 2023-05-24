@@ -58,7 +58,7 @@
                 <version>3.3.1</version>
                 <configuration>
                     <to>
-                    <image>spring-jib</image>
+                    <image>jesuschus44/spring-jib</image>
                     </to>
                 </configuration>
             </plugin>

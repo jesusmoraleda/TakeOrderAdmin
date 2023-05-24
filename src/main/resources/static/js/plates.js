@@ -206,7 +206,6 @@ btnCancelNewPlate.addEventListener("click", async () => {
 //Boton guardar nuevo plato
 btnSaveNewPlate.addEventListener("click", async () => {
   const name = document.getElementById('platename').value;
-  //const available = Boolean(document.getElementById('plateavailable').value);
   const category = document.getElementById('platecategory').value;
   console.log(category);
 
@@ -287,6 +286,7 @@ btnSaveEditPlate.addEventListener("click", async () => {
     }
     
   }
+  console.log(ingredients);
 
   if (!name || ingredients.length < 1) {
     Swal.fire(
@@ -531,7 +531,7 @@ function añadirFiltro(){
         const categoria = filas[i].getElementsByTagName("td")[1].textContent.toLowerCase();
     
         // Comprueba si la categoría de la fila coincide con la categoría seleccionada o si se seleccionó "Todas"
-        if (categoria === categoriaSeleccionada || categoriaSeleccionada === '') {
+        if (categoria.trim() === categoriaSeleccionada || categoriaSeleccionada === '') {
           // Si la fila coincide con la categoría seleccionada o se seleccionó "Todas", muestra la fila
           filas[i].style.display = "";
         } else {
