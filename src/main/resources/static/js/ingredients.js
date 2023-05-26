@@ -1,4 +1,4 @@
-import { saveIngredient, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetIngredientsCategories, onGetIngredientsMeasures } from "./firebase.js"
+import { saveIngredient, onGetIngredients, deleteIngredient, getIngredient, updateIngredient, onGetIngredientsCategories, onGetIngredientsMeasures, onGetPlates} from "./firebase.js"
 
 const btnSaveNewIngredient = document.getElementById('btn-save-new-ingredient')
 const btnAddNewIngredient = document.getElementById('btn-add-new-ingredient')
@@ -12,6 +12,7 @@ let id = ''; //Para la edicion
 const categories = [];
 const measures = [];
 let ingredients = [];
+let ingredients_in_plates = [];
 
 
 //Esto se ejecuta al arrancar la pagina ¿?
@@ -22,9 +23,24 @@ window.addEventListener('DOMContentLoaded', () => {
     onGetIngredientsCategories((querySnapshot) => {
         addIngredientsCategories(querySnapshot);
     })
+
     onGetIngredientsMeasures((querySnapshot) => {
         addIngredientsMeasures(querySnapshot);
     })
+
+    onGetPlates((querySnapshot) => {
+      
+          querySnapshot.forEach((doc) => {
+    
+            const plate = doc.data();
+
+            for (let i = 0; i < plate.ingredients.length; i++) {
+              const ingrediente = plate.ingredients[i].name;
+              ingredients_in_plates.push(ingrediente);
+            }
+          });
+    
+      }) 
 
     onGetIngredients((querySnapshot) => {
         listaIngredientes.innerHTML = "";
@@ -56,6 +72,9 @@ window.addEventListener('DOMContentLoaded', () => {
         btnsDelete.forEach((btn) =>
             btn.addEventListener("click", async (e) => {
                 id = e.target.dataset.id;
+                const doc = await getIngredient(id);
+                const ingredient = doc.data();
+                
                 Swal.fire({
                     title: 'ELIMINAR INGREDIENTE',
                     text: "¿Está seguro de eliminar el ingrediente?",
@@ -67,18 +86,27 @@ window.addEventListener('DOMContentLoaded', () => {
                     cancelButtonText: 'Cancelar'
                   }).then(async (result) => {
                     if (result.isConfirmed) {
-                        try {
-                            await deleteIngredient(id);
+                        if(!comprobarIngredienteEnPlatos(ingredient.name) == true){
+                            try {
+                                await deleteIngredient(id);
+                                Swal.fire(
+                                    'ELIMINAR INGREDIENTE',
+                                    '¡Ingrediente eliminado con exito"',
+                                    'success'
+                                )
+                                id = "";
+                            } catch (error) {
+                                Swal.fire(
+                                    'ELIMINAR INGREDIENTE',
+                                    '¡Error al eliminar el ingrediente!',
+                                    'error'
+                                )
+                            }
+                        }
+                        else{
                             Swal.fire(
                                 'ELIMINAR INGREDIENTE',
-                                '¡Ingrediente eliminado con exito"',
-                                'success'
-                            )
-                            id = "";
-                        } catch (error) {
-                            Swal.fire(
-                                'ELIMINAR INGREDIENTE',
-                                '¡Error al eliminar el ingrediente!',
+                                '¡El ingrediente pertenece a un plato de la carta!',
                                 'error'
                             )
                         }
@@ -136,9 +164,9 @@ btnAddNewIngredient.addEventListener("click", ()=>{
 //Guardar ingrediente
 btnSaveNewIngredient.addEventListener("click", ()=>{
     const name = document.getElementById('ingname').value;
-    const quantity = parseInt(document.getElementById('ingquantity').value);
+    const quantity = parseFloat(document.getElementById('ingquantity').value);
     const measure = document.getElementById('ingmeasure').value;
-    const alert = parseInt(document.getElementById('ingalert').value);
+    const alert = parseFloat(document.getElementById('ingalert').value);
     const category = document.getElementById('ingcategory').value;
 
     resetIngredientModal();
@@ -188,9 +216,9 @@ btnCancelEdit.addEventListener("click", ()=>{
 //Guardar edit de ingrediente
 btnSaveEdit.addEventListener("click", async ()=>{
     const name = document.getElementById('ingnameedit').value;
-    const quantity = parseInt(document.getElementById('ingquantityedit').value);
+    const quantity = parseFloat(document.getElementById('ingquantityedit').value);
     const measure = document.getElementById('ingmeasureedit').value;
-    const alert = parseInt(document.getElementById('ingalertedit').value);
+    const alert = parseFloat(document.getElementById('ingalertedit').value);
     const category = document.getElementById('ingcategoryedit').value;
 
     if (!name || quantity < 0 || alert < 0) {
@@ -341,6 +369,12 @@ function resetIngredientModal(){
     document.getElementById('ingcategory').selectedIndex = 0;
 }
 
+function comprobarIngredienteEnPlatos(name){
+    const option = ingredients_in_plates.find(ing => ing === name);
+    let measure = option ? true : false;
+
+    return measure;
+}
 function añadirBuscador(){
     const buscarInput = document.getElementById('buscarInput');
 

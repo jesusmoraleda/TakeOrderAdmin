@@ -59,9 +59,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         let ingredientesHtml = "";
         for (let i = 0; i < plate.ingredients.length; i++) {
           const ingrediente = plate.ingredients[i].name;
-          const cantidad = plate.ingredients[i].quantity;
+          let cantidad = plate.ingredients[i].quantity;
           const option = options.find(option => option.text === ingrediente);
-          const measure = option ? option.measure : "";
+          let measure = option ? option.measure : "";
+          if (measure == "Kilos") {
+            cantidad = cantidad * 1000;
+            measure = "gramos";
+          }
           ingredientesHtml += `<li>${ingrediente} - ${cantidad} ${measure}</li>`;
         }
 

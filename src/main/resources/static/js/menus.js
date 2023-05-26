@@ -40,9 +40,13 @@ window.addEventListener('DOMContentLoaded', async () => {
             let ingredientesHtml = "";
             for (let i = 0; i < plate.ingredients.length; i++) {
               const ingrediente = plate.ingredients[i].name;
-              const cantidad = plate.ingredients[i].quantity;
+              let cantidad = plate.ingredients[i].quantity;
               const option = ingredientes.find(option => option.text === ingrediente);
-              const measure = option ? option.measure : "";
+              let measure = option ? option.measure : "";
+              if (measure == "Kilos") {
+                cantidad = cantidad * 1000;
+                measure = "gramos";
+              }
               ingredientesHtml += `<li>${ingrediente} - ${cantidad} ${measure}</li>`;
             }
             //console.log(plates);
@@ -171,7 +175,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 btnSaveMenu.addEventListener("click", async () => {
   if(await comprobarDisponibilidadIngredientes() == true){
-    console.log("vamos a guardar platos");
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
     checkboxes.forEach(async (checkbox) => {
@@ -180,7 +183,7 @@ btnSaveMenu.addEventListener("click", async () => {
         if (checkbox.checked != initialState[id]) {
             // El valor del checkbox ha cambiado. Si se ha quitado pongo cantidad a 0
             let cantidad = 0;
-            if(checkbox.checked){ cantidad = parseInt(document.querySelector(`[data-id="${id}"][name="cantidad"]`).value);}
+            if(checkbox.checked){ cantidad = parseFloat(document.querySelector(`[data-id="${id}"][name="cantidad"]`).value);}
             // Actualizar el valor en la base de datos aquí
             try{
               //Actualizar platos (checkboxes y cantidad)

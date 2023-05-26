@@ -110,8 +110,8 @@ btnAddNewDrink.addEventListener("click", ()=>{
 //Guardar bebida
 btnSaveNewDrink.addEventListener("click", ()=>{
     const name = document.getElementById('drinkname').value;
-    const amount = parseInt(document.getElementById('drinkamount').value);
-    const alert = parseInt(document.getElementById('drinkalert').value);
+    const amount = parseFloat(document.getElementById('drinkamount').value);
+    const alert = parseFloat(document.getElementById('drinkalert').value);
 
     if (!name || amount < 0 || alert < 0) {
         Swal.fire(

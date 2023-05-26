@@ -162,46 +162,13 @@ html{
     margin: 0 auto;
 }
 
-/*.menu-restaurante{
-    color: #fff;  
-    text-align: center;
-    background-repeat: no-repeat;
-    border-radius: 6px;
-    display: flex;
-    flex-flow: column;
-}
-
-hr{
-    background: #FFC300;
-    height: 2.5px;
-    width: 30px;
-    border: none;
-}
-
-.precio-menu{
-    font-weight: bold;
-}
-
-.precio-menu span{
-    font-size: 2rem;
-    color: #FFC300;
-}
-
-.menu-title {
-    color: blue;
-    text-align: center;
-}
-
-.menu-category {
-    color: yellow;
-}*/
 .bg-image {
-    background: url(/img/fondo.jpg) center;
+    /*background: url(/img/fondo.jpg) center;*/
     background-size: cover;
 
 }
 .nav-image {
-    background: url(/img/nav.png) center;
+    /*background: url(/img/nav.png) center;*/
     background-size: cover;
 
 }

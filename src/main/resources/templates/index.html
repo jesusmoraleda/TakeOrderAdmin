@@ -21,7 +21,7 @@
     <!--Esto son datos de test, los datos se rellenan en index.js-->
     <div class="container" style="display: flex;">
         <div class="table-container" style="margin-bottom: 20px;">
-            <button class="btn btn-primary" id="btn-restock-ingredientes">Reponer Stock Ingredientes</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stockingredientes" id="btn-restock-ingredientes">Reponer Stock Ingredientes</button>
             <table class="table alertTable">
                 <thead class="thead-dark">
                     <tr>
@@ -38,7 +38,7 @@
         </div>
 
         <div class="table-container" style="margin-bottom: 20px;">
-            <button class="btn btn-primary" id="btn-restock-bebidas">Reponer Stock Bebidas</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stockbebidas" id="btn-restock-bebidas">Reponer Stock Bebidas</button>
             <table class="table alertTable">
                 <thead class="thead-dark">
                     <tr>
@@ -55,6 +55,139 @@
         </div>
     </div>
 
+    <!-- MODAL AÑADIR STOCK INGREDIENTES-->
+    <div class="modal fade" id="stockingredientes" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"> Reponer stock ingredientes</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2>Ingredientes en alerta</h2>
+                <table class="table" id="ingredients-table" style="overflow-y: auto;">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col" onclick="sortTable(0)" class="sortable active">NOMBRE</th>
+                        <th scope="col" onclick="sortTable(1)" class="sortable active">CATEGORIA</th>
+                        <th scope="col" onclick="sortTable(2)" class="sortable active">CANTIDAD</th>
+                        <th scope="col" onclick="sortTable(3)" class="sortable active">MEDIDA</th>
+                        <th scope="col" onclick="sortTable(4)" class="sortable active">ALERTA</th>
+                        <th scope="col">Cantidad a añadir</th>
+                      </tr>
+                    </thead>
+                    <tbody id="listaIngredientes">
+                      <tr>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-save-new-stock-ingredients"><i class="fa-regular fa-floppy-disk"></i>  Guardar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- MODAL AÑADIR STOCK BEBIDAS-->
+    <div class="modal fade" id="stockbebidas" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"> Reponer stock bebidas</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table" id="drinks-table" style="overflow-y: auto;">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col" onclick="sortTable(0)" class="sortable active">NOMBRE</th>
+                        <th scope="col" onclick="sortTable(2)" class="sortable active">CANTIDAD</th>
+                        <th scope="col" onclick="sortTable(4)" class="sortable active">ALERTA</th>
+                        <th scope="col">Cantidad a añadir</th>
+                      </tr>
+                    </thead>
+                    <tbody id="listaBebidas">
+                      <tr>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i>  Cancelar</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-save-new-stock-drinks"><i class="fa-regular fa-floppy-disk"></i>  Guardar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    <script>
+        function sortTable(n) {
+          var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+          table = document.getElementById("plates-table");
+          switching = true;
+          // Set the sorting direction to ascending:
+          dir = "asc";
+          /* Cambiar el color de las letras de la cabecera de la columna seleccionada */
+          var headers = table.getElementsByTagName("th");
+          for (i = 0; i < headers.length; i++) {
+            if (i === n) {
+              headers[i].style.color = "red";
+            } else {
+              headers[i].style.color = "black";
+            }
+          }
+          /* Make a loop that will continue until
+          no switching has been done: */
+          while (switching) {
+            // Start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /* Loop through all table rows (except the
+            first, which contains table headers): */
+            for (i = 1; i < (rows.length - 1); i++) {
+              // Start by saying there should be no switching:
+              shouldSwitch = false;
+              /* Get the two elements you want to compare,
+              one from current row and one from the next: */
+              x = rows[i].getElementsByTagName("TD")[n];
+              y = rows[i + 1].getElementsByTagName("TD")[n];
+              /* Check if the two rows should switch place,
+              based on the direction, asc or desc: */
+              if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+                }
+              } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+                }
+              }
+            }
+            if (shouldSwitch) {
+              /* If a switch has been marked, make the switch
+              and mark that a switch has been done: */
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              switching = true;
+              // Each time a switch is done, increase this count by 1:
+              switchcount ++;
+            } else {
+              /* If no switching has been done AND the direction is "asc",
+              set the direction to "desc" and run the while loop again. */
+              if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+              }
+            }
+          }
+        }
+    </script>
     <script th:src="@{/js/index.js}" type="module"></script>
     <!--<th:block th:replace="fragments/_footer.html :: footer" />-->
     
