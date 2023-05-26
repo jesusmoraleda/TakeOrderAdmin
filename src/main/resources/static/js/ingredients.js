@@ -2,7 +2,6 @@ import { saveIngredient, onGetIngredients, deleteIngredient, getIngredient, upda
 
 const btnSaveNewIngredient = document.getElementById('btn-save-new-ingredient')
 const btnAddNewIngredient = document.getElementById('btn-add-new-ingredient')
-const btnDeleteIngredient = document.getElementById('btn-delete-ingredient')
 const btnCancelEdit = document.getElementById('btn-cancel-edit')
 const btnSaveEdit = document.getElementById('btn-save-edit')
 const listaIngredientes = document.getElementById('listaIngredientes')
@@ -375,6 +374,7 @@ function comprobarIngredienteEnPlatos(name){
 
     return measure;
 }
+
 function añadirBuscador(){
     const buscarInput = document.getElementById('buscarInput');
 

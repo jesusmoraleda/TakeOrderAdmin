@@ -6,9 +6,6 @@ const listaAlertasBebidas = document.getElementById('listaAlertasBebidas');
 const listaIngredientes = document.getElementById('listaIngredientes');
 const listaBebidas = document.getElementById('listaBebidas');
 
-const btnReponerStockIngredientes = document.getElementById('btn-restock-ingredientes');
-const btnReponerStockBebidas = document.getElementById('btn-restock-bebidas');
-
 const btnSaveNewStockIngredients = document.getElementById('btn-save-new-stock-ingredients');
 const btnSaveNewStockDrinks = document.getElementById('btn-save-new-stock-drinks');
 

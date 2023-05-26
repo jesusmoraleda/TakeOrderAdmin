@@ -2,7 +2,6 @@ import { saveDrink, onGetDrinks, deleteDrink, getDrink, updateDrink } from "./fi
 
 const btnSaveNewDrink = document.getElementById('btn-save-new-drink')
 const btnAddNewDrink = document.getElementById('btn-add-new-drink')
-const btnDeleteDrink = document.getElementById('btn-delete-drink')
 const btnCancelEdit = document.getElementById('btn-cancel-edit')
 const btnSaveEdit = document.getElementById('btn-save-edit')
 const listaBebidas = document.getElementById('listaBebidas')
@@ -55,7 +54,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             await deleteDrink(id);
                             Swal.fire(
                                 'ELIMINAR BEBIDA',
-                                'Bebida eliminada con exito"',
+                                'Bebida eliminada con exito',
                                 'success'
                             )
                             id = "";

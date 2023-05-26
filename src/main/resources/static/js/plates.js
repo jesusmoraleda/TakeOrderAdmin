@@ -54,7 +54,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       querySnapshot.forEach((doc) => {
 
         const plate = doc.data();
-        plates.push(plate.name);
+        const name = plate.name;
+        const id = doc.id;
+        plates.push({name, id});
         
         let ingredientesHtml = "";
         for (let i = 0; i < plate.ingredients.length; i++) {
@@ -244,7 +246,14 @@ btnSaveNewPlate.addEventListener("click", async () => {
     );
     return;
   }
-
+  if (nombreExistente(name)) {
+    Swal.fire(
+        'AÑADIR PLATO',
+        '¡No puede haber dos platos con el mismo nombre!',
+        'error'
+    );
+    return;
+  }
   try {
     await savePlate(name, category, ingredients, false, 0);
     Swal.fire(
@@ -300,7 +309,14 @@ btnSaveEditPlate.addEventListener("click", async () => {
     );
     return;
   }
-  
+  if (nombreExistente(name, id)) {
+    Swal.fire(
+        'AÑADIR PLATO',
+        '¡No puede haber dos platos con el mismo nombre!',
+        'error'
+    );
+    return;
+  }
   try {
     await updatePlate(id, {
       name: name,
@@ -437,17 +453,19 @@ function añadirPlatesCategories(querySnapshot) {
     
 }
 
-function nombreExistente(name){
-  // Recorrer la lista de ingredientes
+function nombreExistente(name, id=""){
+  // Recorrer la lista de platos
   for (let i = 0; i < plates.length; i++) {
-      // Comparar el nombre del ingrediente actual con el nombre del nuevo ingrediente
-      if (plates[i].toLowerCase() === name.toLowerCase()) {
-          // Si encontramos un ingrediente con el mismo nombre, devolver true
-          return true;
-      }
+    if(plates[i].id != id){
+        // Comparar el nombre del plato actual con el nombre del nuevo plato
+        if (plates[i].name === name) {
+            // Si encontramos un plato con el mismo nombre, devolver true
+            return true;
+        }
+    }
   }
 
-  // Si no se encuentra un ingrediente con el mismo nombre, devolver false
+  // Si no se encuentra un plato con el mismo nombre, devolver false
   return false;
 }
 
