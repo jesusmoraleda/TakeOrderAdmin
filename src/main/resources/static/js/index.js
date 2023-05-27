@@ -31,6 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
           <tr>
             <td><h5 style="color: red;">${ingredient.name}</h5></td>
             <td><h5 style="color: red;">${ingredient.quantity}</h5></td>
+            <td><h5 style="color: red;">${ingredient.measure}</h5></td>
             <td><h5 style="color: red;">${ingredient.alert}</h5></td>
           </tr>`
           listaIngredientes.innerHTML += `

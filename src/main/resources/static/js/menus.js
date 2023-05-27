@@ -3,6 +3,7 @@ import { onGetPlates, onGetIngredients, updatePlate, updateIngredient} from "./f
 const listaPlatos = document.getElementById('listaPlatos');
 const listaPlatosSelected = document.getElementById("listaPlatosSelected");
 const btnSaveMenu = document.querySelector("#btn-save-menu");
+const btnDeleteMenu = document.querySelector("#btn-clean-menu");
 
 const ingredientes = [];
 const initialState = {};
@@ -172,41 +173,103 @@ window.addEventListener('DOMContentLoaded', async () => {
   añadirFiltro();
 
 })
+btnDeleteMenu.addEventListener("click", () => {
+  Swal.fire({
+    title: 'Estás seguro de eliminar este menú?',
+    icon: 'warning',
+    showCancelButton: true,
+    cancelButtonText: 'No, cancelar',
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, eliminar'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      listaPlatosSelected.innerHTML = "";
 
-btnSaveMenu.addEventListener("click", async () => {
-  if(await comprobarDisponibilidadIngredientes() == true){
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-    checkboxes.forEach(async (checkbox) => {
-        let id = checkbox.dataset.id;
-        console.log(checkbox.checked);
-        if (checkbox.checked != initialState[id]) {
-            // El valor del checkbox ha cambiado. Si se ha quitado pongo cantidad a 0
-            let cantidad = 0;
-            if(checkbox.checked){ cantidad = parseFloat(document.querySelector(`[data-id="${id}"][name="cantidad"]`).value);}
-            // Actualizar el valor en la base de datos aquí
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        
+      checkboxes.forEach(async (checkbox) => {
+          if(checkbox.checked == true){
+            let id = checkbox.dataset.id;
+            checkbox.checked = false;
+            const checkboxIcon = checkbox.nextElementSibling;
+            checkboxIcon.classList.remove('checked');
+            const inputField = document.querySelector(`[data-id="${id}"][name="cantidad"]`);
+            inputField.value = 0;
             try{
-              //Actualizar platos (checkboxes y cantidad)
               await updatePlate(id, {
                 in_menu: checkbox.checked,
-                quantity_menu: cantidad,
+                quantity_menu: inputField.value,
               });
               console.log("updated plato");
             } catch(error){
               Swal.fire(
-                'GUARDAR MENU',
-                'Error al actualizar los platos del menú',
+                'ELIMINAR MENU',
+                'Error al eliminar los platos del menú',
                 'error'
               )
             } 
-        }
-    });
-    Swal.fire(
-      'GUARDAR MENU',
-      'Menu guardado con éxito!',
-      'success'
-    );
-  } 
+          }
+      });
+      Swal.fire(
+        'ELIMINAR MENU',
+        'Menu eliminado con éxito!',
+        'success'
+      );
+    }
+
+  })
+});
+
+btnSaveMenu.addEventListener("click", async () => {
+  Swal.fire({
+    title: 'Estás seguro de guardar este menú?',
+    text: "Si guardas se eliminará el stock correspondiente de los ingredientes necesarios",
+    icon: 'warning',
+    showCancelButton: true,
+    cancelButtonText: 'No, cancelar',
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, guardar'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      if(await comprobarDisponibilidadIngredientes() == true){
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+        checkboxes.forEach(async (checkbox) => {
+            let id = checkbox.dataset.id;
+            console.log(checkbox.checked);
+            if (checkbox.checked != initialState[id]) {
+                // El valor del checkbox ha cambiado. Si se ha quitado pongo cantidad a 0
+                let cantidad = 0;
+                if(checkbox.checked){ cantidad = parseFloat(document.querySelector(`[data-id="${id}"][name="cantidad"]`).value);}
+                // Actualizar el valor en la base de datos aquí
+                try{
+                  //Actualizar platos (checkboxes y cantidad)
+                  await updatePlate(id, {
+                    in_menu: checkbox.checked,
+                    quantity_menu: cantidad,
+                  });
+                  console.log("updated plato");
+                } catch(error){
+                  Swal.fire(
+                    'GUARDAR MENU',
+                    'Error al actualizar los platos del menú',
+                    'error'
+                  )
+                } 
+            }
+        });
+        Swal.fire(
+          'GUARDAR MENU',
+          'Menu guardado con éxito!',
+          'success'
+        );
+      } 
+    }
+    
+  })
+  
 });
 
 async function comprobarDisponibilidadIngredientes() {
